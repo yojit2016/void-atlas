@@ -6,7 +6,17 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 
 html,
-body, 
+body{
+  overflow:hidden;
+  background: black;
+} 
+* {
+  scrollbar-width: none; /* Firefox */
+  
+}
+*::-webkit-scrollbar {
+  display: none;
+}
 #root {
 width: 100%;
 min-height: 100%;

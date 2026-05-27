@@ -15,7 +15,14 @@ export default {
                     cyan: '#74f9ff',
                 },
             },
+            opacity: {
+                '82': '0.82',
+                '05': '0.05',
+            },
+            backgroundImage: {
+                'radial-at-center': 'radial-gradient(circle at center, var(--tw-gradient-stops))',
+            },
         },
     },
     plugins: [],
-} 
+}
