@@ -11,7 +11,7 @@ export default function useMouseParallax(strength = 30, easeStrength = 0.08) {
         const debounceDelay = 16; // ~60fps
 
         const handleMouseMove = (e) => {
-            const now = Date.now();
+             const now = Date.now();
             if (now - lastMouseMoveTime < debounceDelay) return;
             lastMouseMoveTime = now;
 

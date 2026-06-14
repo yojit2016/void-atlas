@@ -6,9 +6,14 @@ export default function StarfieldCanvas() {
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
+    let animationFrameId
 
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    const handleResize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+
+    handleResize()
     const stars = Array.from({ length: 400 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
@@ -30,13 +35,16 @@ export default function StarfieldCanvas() {
         ctx.globalAlpha = 0.8
         ctx.fill()
       })
-      requestAnimationFrame(animate)
+      animationFrameId = requestAnimationFrame(animate)
     }
     animate()
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    })
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      cancelAnimationFrame(animationFrameId)
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   return (

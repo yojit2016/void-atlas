@@ -1,24 +1,12 @@
-import mockSpaceData from "../../data/mockSpaceData";
 import ImagePanel from "./ImagePanel";
-
-export default function CosmicCarousel() {
+export default function CosmicCarousel({ items }) {
   return (
-    <div className=" flex
-        h-screen
-        w-full
-        overflow-x-auto
-        overflow-y-hidden
-        snap-x
-        snap-mandatory
-        scroll-smooth">
-
-      {mockSpaceData.map((item) => (
-        <div key={item.id} 
-        className="snap-center">
-          <ImagePanel item={item} />
-        </div>
-      ))}
-
+    <div className="flex h-screen snap-x snap-mandatory overflow-x-auto overflow-y-hidden scroll-smooth"
+      style={{ scrollbarWidth: 'none' }}>
+        {items.map((item) => (
+          <ImagePanel key={item.id} item={item} />
+        ))}
     </div>
   );
 }
+      
