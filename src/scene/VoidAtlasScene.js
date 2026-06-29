@@ -1,9 +1,12 @@
 import * as THREE from "three";
 import createStarField from "./StarField3D";
+import createAxisPole  from "./AxisPole";
 
 export default class VoidAtlasScene {
   constructor(canvas) {
     this.canvas = canvas;
+
+    this.clock = new THREE.Clock();
 
     this.scene = new THREE.Scene();
 
@@ -31,11 +34,15 @@ export default class VoidAtlasScene {
       window.innerHeight
     );
 
-    this.renderer.setClearColor("#000000");
+    this.renderer.setClearColor("#020028");
 
     // STARFIELD
     this.starField = createStarField();
     this.scene.add(this.starField);
+
+    // AXIS POLE
+    this.axisPole = createAxisPole();
+    this.scene.add(this.axisPole);
 
     this.animate = this.animate.bind(this);
     this.handleResize = this.handleResize.bind(this);
@@ -51,6 +58,12 @@ export default class VoidAtlasScene {
   }
 
   animate() {
+    const delta = this.clock.getDelta();
+    if(this.axisPole.userData.update)
+    { 
+      this.axisPole.userData.update(delta); 
+
+    }
     this.renderer.render(
       this.scene,
       this.camera
