@@ -70,7 +70,7 @@ export default function createAxisPole() {
         group.add(points);
 
     }
-    group.userData.update =(delta) =>
+    group.update =(delta) =>
     {
         group.rotation.y += delta*0.12;
 
