@@ -1,24 +1,36 @@
 import * as THREE from "three";
+
 import createStarField from "./StarField3D";
-import createAxisPole  from "./AxisPole";
+import createAxisPole from "./AxisPole";
+import CameraRig from "./CameraRig";
 
 export default class VoidAtlasScene {
   constructor(canvas) {
     this.canvas = canvas;
 
-    this.clock = new THREE.Clock();
-
+    // =========================
+    // Scene
+    // =========================
     this.scene = new THREE.Scene();
 
-    this.camera = new THREE.PerspectiveCamera(
-      60,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      5000
-    );
+    // =========================
+    // Timer
+    // (Clock will be replaced by Timer in a future cleanup.)
+    // =========================
+    this.clock = new THREE.Clock();
 
-    this.camera.position.set(0, 0, 10);
+    // =========================
+    // Camera Rig
+    // =========================
+    this.cameraRig = new CameraRig();
 
+    this.scene.add(this.cameraRig.group);
+
+    this.camera = this.cameraRig.camera;
+
+    // =========================
+    // Renderer
+    // =========================
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvas,
       antialias: true,
@@ -34,16 +46,25 @@ export default class VoidAtlasScene {
       window.innerHeight
     );
 
-    this.renderer.setClearColor("#020028");
+    this.renderer.setClearColor("#020208");
 
-    // STARFIELD
+    // =========================
+    // Starfield
+    // =========================
     this.starField = createStarField();
+
     this.scene.add(this.starField);
 
-    // AXIS POLE
+    // =========================
+    // Helix
+    // =========================
     this.axisPole = createAxisPole();
+
     this.scene.add(this.axisPole);
 
+    // =========================
+    // Bindings
+    // =========================
     this.animate = this.animate.bind(this);
     this.handleResize = this.handleResize.bind(this);
 
@@ -52,33 +73,34 @@ export default class VoidAtlasScene {
       this.handleResize
     );
 
-    this.animationFrame = requestAnimationFrame(
-      this.animate
-    );
+    this.animationFrame =
+      requestAnimationFrame(this.animate);
   }
 
   animate() {
     const delta = this.clock.getDelta();
-    if(this.axisPole.userData.update)
-    { 
-      this.axisPole.userData.update(delta); 
 
-    }
+    // =========================
+    // Update Scene Components
+    // =========================
+    this.axisPole.update(delta);
+
+    this.cameraRig.update(delta);
+
     this.renderer.render(
       this.scene,
       this.camera
     );
 
-    this.animationFrame = requestAnimationFrame(
-      this.animate
-    );
+    this.animationFrame =
+      requestAnimationFrame(this.animate);
   }
 
   handleResize() {
-    this.camera.aspect =
-      window.innerWidth / window.innerHeight;
-
-    this.camera.updateProjectionMatrix();
+    this.cameraRig.handleResize(
+      window.innerWidth,
+      window.innerHeight
+    );
 
     this.renderer.setSize(
       window.innerWidth,
