@@ -1,51 +1,69 @@
 import * as THREE from "three";
 
 export default class CameraRig {
-    constructor() {
-        //Parent object will move through the world
-        this.group = new THREE.Group();
+  constructor() {
+    // Parent object that moves through the world
+    this.group = new THREE.Group();
 
-        //camera
+    // Camera
+    this.camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      5000
+    );
 
-        this.camera = new THREE.PerspectiveCamera(
-            60,
-            window.innerWidth / window.innerHeight,
-            0.1,
-            5000
-        );
+    // Base camera position
+    this.baseX = 0;
+    this.baseY = 0;
+    this.baseZ = 600;
 
-        //initial viewing position
-        this.camera.position.set(0, 0, 10);
+    this.camera.position.set(
+      this.baseX,
+      this.baseY,
+      this.baseZ
+    );
 
-        //Parent camera to rig
-        this.group.add(this.camera);
-        //Mouse targets 
-        this.targetX = 0;
-        this.targetY = 0;
+    // Parent camera to rig
+    this.group.add(this.camera);
 
-        this.currentX = 0;
-        this.currentY = 0;
+    // Mouse targets
+    this.targetX = 0;
+    this.targetY = 0;
 
-        this.lookStrength = 5;
-        this.smoothing = 0.08;
+    this.currentX = 0;
+    this.currentY = 0;
 
-    }
-    setMouse(x,y){
-        this.targetX = x;
-        this.targetY = y;
-    }
-    update(){
+    this.lookStrength = 5;
+    this.smoothing = 0.08;
+  }
 
-        this.currentX += (this.targetX - this.currentX) * this.smoothing;
-        this.currentY += (this.targetY - this.currentY) * this.smoothing;
+  setMouse(x, y) {
+    this.targetX = x;
+    this.targetY = y;
+  }
 
-        this.camera.position.x += this.currentX * this.lookStrength;
-        this.camera.position.y += this.currentY * this.lookStrength;
-    }
+  update() {
+    this.currentX +=
+      (this.targetX - this.currentX) *
+      this.smoothing;
 
-    handleResize(width, height){
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
-    }
-    
+    this.currentY +=
+      (this.targetY - this.currentY) *
+      this.smoothing;
+
+    // Apply offset relative to the base position
+    this.camera.position.x =
+      this.baseX +
+      this.currentX * this.lookStrength;
+
+    this.camera.position.y =
+      this.baseY +
+      this.currentY * this.lookStrength;
+  }
+
+  handleResize(width, height) {
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+  }
 }
