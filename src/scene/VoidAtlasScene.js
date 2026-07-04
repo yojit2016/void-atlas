@@ -3,6 +3,7 @@ import * as THREE from "three";
 import createStarField from "./StarField3D";
 import createAxisPole from "./AxisPole";
 import CameraRig from "./CameraRig";
+import CosmicCarousel3D from "./CosmicCarousel3D";
 
 export default class VoidAtlasScene {
   constructor(canvas) {
@@ -15,7 +16,6 @@ export default class VoidAtlasScene {
 
     // =========================
     // Timer
-    // (Clock will be replaced by Timer in a future cleanup.)
     // =========================
     this.clock = new THREE.Clock();
 
@@ -52,15 +52,20 @@ export default class VoidAtlasScene {
     // Starfield
     // =========================
     this.starField = createStarField();
-
     this.scene.add(this.starField);
 
     // =========================
     // Helix
     // =========================
     this.axisPole = createAxisPole();
-
     this.scene.add(this.axisPole);
+    this.axisPole.position.y = -50;
+
+    // =========================
+    // Orbit Carousel
+    // =========================
+    this.carousel = new CosmicCarousel3D();
+    this.scene.add(this.carousel.group);
 
     // =========================
     // Bindings
@@ -81,10 +86,10 @@ export default class VoidAtlasScene {
     const delta = this.clock.getDelta();
 
     // =========================
-    // Update Scene Components
+    // Update Components
     // =========================
     this.axisPole.update(delta);
-
+    this.carousel.update(delta);
     this.cameraRig.update(delta);
 
     this.renderer.render(
