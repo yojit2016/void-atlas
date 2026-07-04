@@ -23,6 +23,8 @@ export default class CameraRig {
       this.baseY,
       this.baseZ
     );
+    this.camera.rotation.x = -0.15;
+    
 
     // Parent camera to rig
     this.group.add(this.camera);
