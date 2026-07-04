@@ -4,7 +4,7 @@ export default function createAxisPole() {
     const group = new THREE.Group();
 
     const strandCount = 2;
-    const pointsPerStrand = 2500;
+    const pointsPerStrand = 800;
 
     const helixRadius = 50;
     const helixPitch = 0.08;
