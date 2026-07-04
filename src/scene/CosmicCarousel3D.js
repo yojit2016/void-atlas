@@ -8,7 +8,7 @@ export default class CosmicCarousel3D {
     this.orbitRadius = 250;
     this.layerSpacing = 300;
     this.nodesPerLayer = 4;
-    this.layerCount = 5;
+    this.layerCount = 2;
 
     this.nodeWidth = 80;
     this.nodeHeight = 52;

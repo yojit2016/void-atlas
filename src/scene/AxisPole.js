@@ -7,7 +7,7 @@ export default function createAxisPole() {
     const pointsPerStrand = 2500;
 
     const helixRadius = 50;
-    const helixPitch = 0.18;
+    const helixPitch = 0.08;
     const helixHeight = 400;
 
     for(let strand = 0; strand< strandCount; strand++)
