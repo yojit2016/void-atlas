@@ -15,6 +15,9 @@ export default class CosmicCarousel3D {
 
     this.nodes = [];
 
+    // NEW
+    this.textureLoader = new THREE.TextureLoader();
+
     this.build();
   }
 
@@ -52,11 +55,10 @@ export default class CosmicCarousel3D {
             side: THREE.DoubleSide,
           });
 
-        const plane =
-          new THREE.Mesh(
-            geometry,
-            material
-          );
+        const plane = new THREE.Mesh(
+          geometry,
+          material
+        );
 
         plane.position.set(
           Math.cos(angle) *
@@ -66,8 +68,9 @@ export default class CosmicCarousel3D {
             this.orbitRadius
         );
 
-        // Face inward toward helix
-        plane.rotation.y = angle + Math.PI;
+        // Face outward
+        plane.rotation.y =
+          angle + Math.PI;
 
         layerGroup.add(plane);
 
@@ -76,6 +79,44 @@ export default class CosmicCarousel3D {
 
       this.group.add(layerGroup);
     }
+  }
+
+  // =====================================================
+  // NEW
+  // Apply image textures to every orbit node
+  // =====================================================
+  setImages(images) {
+    if (!images || !images.length) return;
+
+    this.nodes.forEach((node, index) => {
+      const image =
+        images[index % images.length];
+
+      if (!image?.image) return;
+
+      this.textureLoader.load(
+        image.image,
+        (texture) => {
+          texture.colorSpace =
+            THREE.SRGBColorSpace;
+
+          node.material.map = texture;
+          node.material.color.set("#ffffff");
+          node.material.opacity = 1;
+          node.material.transparent = false;
+
+          node.material.needsUpdate = true;
+
+          // Save metadata for later
+          node.userData = {
+            title: image.title,
+            sourceUrl: image.sourceUrl,
+            sourceName: image.sourceName,
+            image,
+          };
+        }
+      );
+    });
   }
 
   update(delta) {
