@@ -15,7 +15,7 @@ export async function fetchNASAImageLibrary(
       )}&media_type=image`
     );
 
-    const data = await response.json();
+    const data = await response.json(); 
 
     const items = data?.collection?.items || [];
 
@@ -27,10 +27,7 @@ export async function fetchNASAImageLibrary(
 
         const previewUrl = linkObj.href || "";
 
-        const imageUrl = previewUrl.replace(
-          /~(thumb|medium|small|large)\.(jpg|jpeg|png)$/i,
-          "~orig.$2"
-        );
+        const imageUrl = previewUrl;//replace(/~(thumb|medium|small|large)\.(jpg|jpeg|png)$/i,"~orig.$2");
 
         return {
           id:
