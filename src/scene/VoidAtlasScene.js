@@ -49,6 +49,13 @@ export default class VoidAtlasScene {
     this.renderer.setClearColor("#020208");
 
     // =========================
+    // Raycaster (NEW)
+    // =========================
+    this.raycaster = new THREE.Raycaster();
+
+    this.pointer = new THREE.Vector2();
+
+    // =========================
     // Starfield
     // =========================
     this.starField = createStarField();
@@ -73,13 +80,70 @@ export default class VoidAtlasScene {
     this.animate = this.animate.bind(this);
     this.handleResize = this.handleResize.bind(this);
 
+    // NEW
+    this.handlePointerDown =
+      this.handlePointerDown.bind(this);
+
+    // =========================
+    // Events
+    // =========================
     window.addEventListener(
       "resize",
       this.handleResize
     );
 
+    // NEW
+    this.renderer.domElement.addEventListener(
+      "pointerdown",
+      this.handlePointerDown
+    );
+
+    // =========================
+    // Start render loop
+    // =========================
     this.animationFrame =
       requestAnimationFrame(this.animate);
+  }
+
+  // =========================================
+  // NEW: Raycaster click handler
+  // =========================================
+  handlePointerDown(event) {
+    const rect =
+      this.renderer.domElement.getBoundingClientRect();
+
+    this.pointer.x =
+      ((event.clientX - rect.left) / rect.width) * 2 - 1;
+
+    this.pointer.y =
+      -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    this.raycaster.setFromCamera(
+      this.pointer,
+      this.camera
+    );
+
+    const intersections =
+      this.raycaster.intersectObjects(
+        this.carousel.nodes,
+        false
+      );
+
+    if (intersections.length === 0) return;
+
+    const node =
+      intersections[0].object;
+
+    const sourceUrl =
+      node.userData?.sourceUrl;
+
+    if (sourceUrl) {
+      window.open(
+        sourceUrl,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }
   }
 
   animate() {
@@ -119,6 +183,12 @@ export default class VoidAtlasScene {
     window.removeEventListener(
       "resize",
       this.handleResize
+    );
+
+    // NEW
+    this.renderer.domElement.removeEventListener(
+      "pointerdown",
+      this.handlePointerDown
     );
 
     this.renderer.dispose();
