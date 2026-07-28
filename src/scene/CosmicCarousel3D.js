@@ -86,6 +86,7 @@ export default class CosmicCarousel3D {
   // Apply image textures to every orbit node
   // =====================================================
   setImages(images) {
+    console.log("setImages called",images);
     if (!images || !images.length) return;
 
     this.nodes.forEach((node, index) => {
@@ -97,6 +98,7 @@ export default class CosmicCarousel3D {
       this.textureLoader.load(
         image.image,
         (texture) => {
+          console.log("Loaded texture", image.title);
           texture.colorSpace =
             THREE.SRGBColorSpace;
 
@@ -114,6 +116,7 @@ export default class CosmicCarousel3D {
             sourceName: image.sourceName,
             image,
           };
+          (err) =>{console.error("Texture failed", image.image, err);}
         }
       );
     });
