@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 
-import {
-  fetchAPODImages,
-  fetchNASAImageLibrary,
-} from "../api/nasaApi";
-
+import { fetchNASAImageLibrary } from "../api/nasaApi";
 import { fallbackSpaceData } from "../data/fallbackSpaceData";
 
 function checkImageDimensions(url) {
@@ -15,8 +11,7 @@ function checkImageDimensions(url) {
       resolve({
         width: img.naturalWidth,
         height: img.naturalHeight,
-        aspectRatio:
-          img.naturalWidth / img.naturalHeight,
+        aspectRatio: img.naturalWidth / img.naturalHeight,
         valid: img.naturalWidth >= 1280,
       });
     };
@@ -44,171 +39,76 @@ export function useCosmicData() {
       try {
         setLoading(true);
 
-        console.log(
-          "Fetching NASA APOD images..."
+        console.log("Fetching NASA Image Library...");
+
+        const libraryImages = await fetchNASAImageLibrary(
+          "nebula",
+          50
         );
 
-        // --------------------------------------------------
-        // 1. NASA APOD
-        // --------------------------------------------------
-
-        const apodImages =
-          await fetchAPODImages(50);
-
-        let verifiedAPOD = [];
-
-        if (apodImages.length > 0) {
-          const checked =
-            await Promise.all(
-              apodImages.map(async (item) => {
-                const dims =
-                  await checkImageDimensions(
-                    item.image
-                  );
-
-                return {
-                  ...item,
-                  dims,
-                };
-              })
-            );
-
-          verifiedAPOD = checked
-            .filter((item) => {
-              if (item.dims.valid) {
-                return true;
-              }
-
-              console.warn(
-                `Rejected APOD image "${item.title}" (${item.dims.width}px wide)`
-              );
-
-              return false;
-            })
-            .map((item) => ({
-              ...item,
-
-              width: item.dims.width,
-
-              height: item.dims.height,
-
-              aspectRatio:
-                item.dims.aspectRatio,
-            }));
-        }
-
-        if (verifiedAPOD.length >= 5) {
-          console.log(
-            `Loaded ${verifiedAPOD.length} verified APOD images.`
-          );
-
-          setImages(
-            verifiedAPOD.slice(0, 8)
-          );
-
-          return;
-        }
-
-        console.warn(
-          `Only ${verifiedAPOD.length} APOD images passed validation. Falling back to NASA Image Library...`
-        );
-
-        // --------------------------------------------------
-        // 2. NASA IMAGE LIBRARY
-        // --------------------------------------------------
-
-        const libraryImages =
-          await fetchNASAImageLibrary(
-            "nebula",
-            50
-          );
-
-        let verifiedLibrary = [];
+        let verifiedImages = [];
 
         if (libraryImages.length > 0) {
-          const checked =
-            await Promise.all(
-              libraryImages.map(
-                async (item) => {
-                  const dims =
-                    await checkImageDimensions(
-                      item.image
-                    );
+          const checked = await Promise.all(
+            libraryImages.map(async (item) => {
+              const dims = await checkImageDimensions(
+                item.image
+              );
 
-                  return {
-                    ...item,
-                    dims,
-                  };
-                }
-              )
-            );
+              return {
+                ...item,
+                dims,
+              };
+            })
+          );
 
-          verifiedLibrary = checked
+          verifiedImages = checked
             .filter((item) => {
               if (item.dims.valid) {
                 return true;
               }
 
               console.warn(
-                `Rejected NASA Library image "${item.title}" (${item.dims.width}px wide)`
+                `Rejected "${item.title}" (${item.dims.width}px wide)`
               );
 
               return false;
             })
             .map((item) => ({
               ...item,
-
               width: item.dims.width,
-
               height: item.dims.height,
-
-              aspectRatio:
-                item.dims.aspectRatio,
+              aspectRatio: item.dims.aspectRatio,
             }));
         }
 
-        if (verifiedLibrary.length >= 5) {
+        if (verifiedImages.length >= 8) {
           console.log(
-            `Loaded ${verifiedLibrary.length} verified NASA Library images.`
+            `Loaded ${verifiedImages.length} verified NASA images.`
           );
 
-          setImages(
-            verifiedLibrary.slice(0, 8)
-          );
-
+          setImages(verifiedImages.slice(0, 8));
           return;
         }
 
         console.warn(
-          "NASA Image Library also failed validation. Using bundled fallback images."
+          "NASA Image Library returned too few valid images. Using fallback archive."
         );
 
-        // --------------------------------------------------
-        // 3. LOCAL FALLBACK
-        // --------------------------------------------------
+        const checkedFallbacks = await Promise.all(
+          fallbackSpaceData.map(async (item) => {
+            const dims = await checkImageDimensions(
+              item.image
+            );
 
-        const checkedFallbacks =
-          await Promise.all(
-            fallbackSpaceData.map(
-              async (item) => {
-                const dims =
-                  await checkImageDimensions(
-                    item.image
-                  );
-
-                return {
-                  ...item,
-
-                  width: dims.width,
-
-                  height: dims.height,
-
-                  aspectRatio:
-                    dims.aspectRatio,
-                };
-              }
-            )
-          );
+            return {
+              ...item,
+              width: dims.width,
+              height: dims.height,
+              aspectRatio: dims.aspectRatio,
+            };
+          })
+        );
 
         setImages(checkedFallbacks);
       } catch (err) {
@@ -216,28 +116,20 @@ export function useCosmicData() {
 
         setError(true);
 
-        const checkedFallbacks =
-          await Promise.all(
-            fallbackSpaceData.map(
-              async (item) => {
-                const dims =
-                  await checkImageDimensions(
-                    item.image
-                  );
+        const checkedFallbacks = await Promise.all(
+          fallbackSpaceData.map(async (item) => {
+            const dims = await checkImageDimensions(
+              item.image
+            );
 
-                return {
-                  ...item,
-
-                  width: dims.width,
-
-                  height: dims.height,
-
-                  aspectRatio:
-                    dims.aspectRatio,
-                };
-              }
-            )
-          );
+            return {
+              ...item,
+              width: dims.width,
+              height: dims.height,
+              aspectRatio: dims.aspectRatio,
+            };
+          })
+        );
 
         setImages(checkedFallbacks);
       } finally {
