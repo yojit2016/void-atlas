@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import VoidAtlasScene from "../../scene/VoidAtlasScene";
-import useCosmicData from "../../hooks/useCosmicData";
+import { useCosmicData } from "../../hooks/useCosmicData";
 
 export default function SceneCanvas() {
   const canvasRef = useRef(null);
