@@ -1,6 +1,7 @@
 const NASA_API_KEY =
   import.meta.env.VITE_NASA_API_KEY || "DEMO_KEY";
-
+const proxyImage = (url) =>
+  `/api/imageProxy?url=${encodeURIComponent(url)}`;
 /**
  * NASA Image Library
  */
@@ -39,7 +40,7 @@ export async function fetchNASAImageLibrary(
             dataObj.title ||
             "Untitled Space Object",
 
-          image: imageUrl,
+          image: proxyImage(item.hdurl || item.url),
 
           description:
             dataObj.description ||
