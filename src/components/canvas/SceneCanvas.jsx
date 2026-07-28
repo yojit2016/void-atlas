@@ -25,6 +25,7 @@ export default function SceneCanvas() {
   useEffect(() => {
     if (!sceneRef.current) return;
     if (!images || images.length === 0) return;
+    console.log("Images recieved:", images);
 
     sceneRef.current.carousel.setImages(images);
   }, [images]);
