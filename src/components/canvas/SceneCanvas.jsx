@@ -8,7 +8,7 @@ export default function SceneCanvas() {
 
   const { images } = useCosmicData();
 
-  // Create Three.js scene once
+  // Create Three.js scene 
   useEffect(() => {
     if (!canvasRef.current) return;
 
