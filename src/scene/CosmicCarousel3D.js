@@ -5,10 +5,10 @@ export default class CosmicCarousel3D {
     this.group = new THREE.Group();
 
     // ---------- Layout ----------
-    this.orbitRadius = 250;
+    this.orbitRadius = 320;
     this.layerSpacing = 300;
-    this.nodesPerLayer = 4;
-    this.layerCount = 2;
+    this.nodesPerLayer = 6;
+    this.layerCount = 1;
 
     this.nodeWidth = 80;
     this.nodeHeight = 52;
