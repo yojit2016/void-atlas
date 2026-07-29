@@ -28,7 +28,10 @@ export async function fetchNASAImageLibrary(
 
         const previewUrl = linkObj.href || "";
 
-        const imageUrl = previewUrl;//replace(/~(thumb|medium|small|large)\.(jpg|jpeg|png)$/i,"~orig.$2");
+        const imageUrl = previewUrl.replace(
+          /~(thumb|small)\.(jpg|jpeg|png)$/i,
+          '~medium.$2'
+        );
 
         return {
           id:
@@ -40,7 +43,7 @@ export async function fetchNASAImageLibrary(
             dataObj.title ||
             "Untitled Space Object",
 
-          image: proxyImage(item.hdurl || item.url),
+          image: imageUrl,
 
           description:
             dataObj.description ||

@@ -73,6 +73,7 @@ export default class VoidAtlasScene {
     // =========================
     this.carousel = new CosmicCarousel3D();
     this.scene.add(this.carousel.group);
+    this.carousel.group.rotation.x = 0.25;
 
     // =========================
     // Bindings

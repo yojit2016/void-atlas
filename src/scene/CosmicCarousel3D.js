@@ -68,9 +68,8 @@ export default class CosmicCarousel3D {
             this.orbitRadius
         );
 
-        // Face outward
-        plane.rotation.y =
-          angle + Math.PI;
+        // Face camera position
+        plane.lookAt(new THREE.Vector3(0, 0, 800));
 
         layerGroup.add(plane);
 
