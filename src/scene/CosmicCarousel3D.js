@@ -22,11 +22,6 @@ export default class CosmicCarousel3D {
   }
 
   build() {
-    const geometry = new THREE.PlaneGeometry(
-      this.nodeWidth,
-      this.nodeHeight
-    );
-
     for (
       let layer = 0;
       layer < this.layerCount;
@@ -46,6 +41,11 @@ export default class CosmicCarousel3D {
           (i / this.nodesPerLayer) *
           Math.PI *
           2;
+
+        const geometry = new THREE.PlaneGeometry(
+          this.nodeWidth,
+          this.nodeHeight
+        );
 
         const material =
           new THREE.MeshBasicMaterial({
