@@ -174,6 +174,7 @@ export default class VoidAtlasScene {
 
     this.axisPole.updateMatrix(delta);
     this.carousel.update(delta);
+    this.carousel.updateFocus(this.camera);
     this.cameraRig.update(delta);
 
     this.renderer.render(this.scene, this.camera);
