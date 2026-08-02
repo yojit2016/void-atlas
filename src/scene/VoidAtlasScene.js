@@ -1,10 +1,11 @@
 import * as THREE from "three";
+import { gsap } from "gsap";
 
 import createStarField from "./StarField3D";
 import createAxisPole from "./AxisPole";
 import CameraRig from "./CameraRig";
 import CosmicCarousel3D from "./CosmicCarousel3D";
-
+import ScrollController from "./ScrollController";
 export default class VoidAtlasScene {
   constructor(canvas) {
     this.canvas = canvas;
@@ -74,6 +75,27 @@ export default class VoidAtlasScene {
     this.carousel = new CosmicCarousel3D();
     this.scene.add(this.carousel.group);
     this.carousel.group.rotation.x = 0.25;
+    // =========================
+    // Scroll Controller
+    // =========================
+    this.scrollController = new ScrollController();
+
+    this.unsubscribeScroll = this.scrollController.onProgressChange((progress) => {
+      gsap.to(this.cameraRig.group.position, {
+        z: THREE.MathUtils.lerp(
+          0,-300,progress
+        ),
+        duration: 0.8,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+      gsap.to(this.carousel.group.rotation, {
+        y:progress * Math.PI * 2,
+        duration: 0.8,
+        ease: "power2.out",
+      }
+      );
+      });
 
     // =========================
     // Bindings
@@ -150,20 +172,14 @@ export default class VoidAtlasScene {
   animate() {
     const delta = this.clock.getDelta();
 
-    // =========================
-    // Update Components
-    // =========================
-    this.axisPole.update(delta);
+    this.axisPole.updateMatrix(delta);
     this.carousel.update(delta);
     this.cameraRig.update(delta);
 
-    this.renderer.render(
-      this.scene,
-      this.camera
-    );
-
-    this.animationFrame =
-      requestAnimationFrame(this.animate);
+    this.renderer.render(this.scene, this.camera);
+    
+    this.animationFrame = 
+    requestAnimationFrame(this.animate);
   }
 
   handleResize() {
@@ -191,6 +207,13 @@ export default class VoidAtlasScene {
       "pointerdown",
       this.handlePointerDown
     );
+    if (this.unsubscribeScroll) {
+      this.unsubscribeScroll();
+    }
+
+    if (this.scrollController) {
+      this.scrollController.destroy();
+    }
 
     this.renderer.dispose();
   }
