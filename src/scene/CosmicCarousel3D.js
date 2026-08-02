@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { gsap } from "gsap";
 
 export default class CosmicCarousel3D {
   constructor() {
@@ -17,6 +18,7 @@ export default class CosmicCarousel3D {
 
     // NEW
     this.textureLoader = new THREE.TextureLoader();
+    this.focusedIndex = -1;
 
     this.build();
   }
@@ -120,6 +122,72 @@ export default class CosmicCarousel3D {
       );
     });
   }
+
+  // =====================================================
+  // NEW
+  updateFocus(camera) {
+  const cameraWorldPos = new THREE.Vector3();
+  camera.getWorldPosition(cameraWorldPos);
+
+  let closestIndex = 0;
+  let closestDist = Infinity;
+
+  this.nodes.forEach((node, i) => {
+    const nodeWorldPos = new THREE.Vector3();
+    node.getWorldPosition(nodeWorldPos);
+
+    const dist =
+      cameraWorldPos.distanceTo(nodeWorldPos);
+
+    if (dist < closestDist) {
+      closestDist = dist;
+      closestIndex = i;
+    }
+  });
+
+  if (closestIndex === this.focusedIndex) return;
+
+  this.focusedIndex = closestIndex;
+
+  this.nodes.forEach((node, i) => {
+    const diff = Math.abs(i - closestIndex);
+
+    const wrapped = Math.min(
+      diff,
+      this.nodes.length - diff
+    );
+
+    let targetScale;
+    let targetOpacity;
+
+    if (wrapped === 0) {
+      targetScale = 1.15;
+      targetOpacity = 1.0;
+    } else if (wrapped === 1) {
+      targetScale = 0.95;
+      targetOpacity = 0.85;
+    } else {
+      targetScale = 0.8;
+      targetOpacity = 0.6;
+    }
+
+    gsap.to(node.scale, {
+      x: targetScale,
+      y: targetScale,
+      z: targetScale,
+      duration: 0.4,
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+
+    gsap.to(node.material, {
+      opacity: targetOpacity,
+      duration: 0.4,
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+  });
+}
 
   update(delta) {
     // Reserved for future rotation.
