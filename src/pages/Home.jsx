@@ -1,9 +1,15 @@
-import SceneCanvas from "../components/canvas/SceneCanvas";
+import SceneCanvas from "../components/SceneCanvas";
 
 export default function Home() {
+
   return (
-    <section className="relative h-screen overflow-hidden">
+    <>
+      <div
+        style={{ height: "800vh"}}
+        className="pointer-events-none"
+        aria-hidden="true"
+        />
       <SceneCanvas />
-    </section>
-  );
+    </>
+  )
 }
