@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { gsap } from "gsap";
+import TextureManager from "./TextureManager";
 
 export default class CosmicCarousel3D {
   constructor() {
@@ -17,8 +18,9 @@ export default class CosmicCarousel3D {
     this.nodes = [];
 
     // NEW
-    this.textureLoader = new THREE.TextureLoader();
+    
     this.focusedIndex = -1;
+    this.textureManager = null;
 
     this.build();
   }
@@ -87,41 +89,43 @@ export default class CosmicCarousel3D {
   // Apply image textures to every orbit node
   // =====================================================
   setImages(images) {
-    console.log("setImages called",images);
-    if (!images || !images.length) return;
+    
+    if(!images || !images.length)
+      return;
+    this.images = images;
+    
+    if(this.textureManager)
+    {
+      this.textureManager.dispose();
+    }
 
-    this.nodes.forEach((node, index) => {
-      const image =
-        images[index % images.length];
+    this.textureManager = new TextureManager(images);
+    this.textureManager.onTextureReady = 
+    (index,texture) => {const node = this.nodes[index];
+      if(!node) return;
+      node.material.map = texture;
+      node.material.color.set("#ffffff");
+      node.material.transparent = false;
+      node.material.opacity = 1;
+      node.material.needsUpdate = true;
 
-      if (!image?.image) return;
+      node.userData = {
+        title: images[index].title,
+        sourceUrl: images[index].sourceUrl,
+        sourceName: images[index].sourceName,
+        image: images[index],
+      
+      };
 
-      this.textureLoader.load(
-        image.image,
-        (texture) => {
-          console.log("Loaded texture", image.title);
-          texture.colorSpace =
-            THREE.SRGBColorSpace;
+    };
 
-          node.material.map = texture;
-          node.material.color.set("#ffffff");
-          node.material.opacity = 1;
-          node.material.transparent = false;
-
-          node.material.needsUpdate = true;
-
-          // Save metadata for later
-          node.userData = {
-            title: image.title,
-            sourceUrl: image.sourceUrl,
-            sourceName: image.sourceName,
-            image,
-          };
-          (err) =>{console.error("Texture failed", image.image, err);}
-        }
-      );
+    this.nodes.forEach((node, index)=> {
+      node.material.map = 
+      this.textureManager.getTexture(index);
+      node.material.needsUpdate = true;
     });
   }
+  
 
   // =====================================================
   // NEW
@@ -148,6 +152,11 @@ export default class CosmicCarousel3D {
   if (closestIndex === this.focusedIndex) return;
 
   this.focusedIndex = closestIndex;
+
+  if(this.textureManager)
+  {
+    this.textureManager.setFocused(this.focusedIndex);
+  }
 
   this.nodes.forEach((node, i) => {
     const diff = Math.abs(i - closestIndex);
@@ -188,6 +197,13 @@ export default class CosmicCarousel3D {
     });
   });
 }
+
+dispose() {
+    if (this.textureManager)
+    {
+      this.textureManager.dispose();
+    }
+  }
 
   update(delta) {
     // Reserved for future rotation.
