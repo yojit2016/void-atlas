@@ -152,6 +152,7 @@ export default class CosmicCarousel3D {
   if (closestIndex === this.focusedIndex) return;
 
   this.focusedIndex = closestIndex;
+  this.onFocusChange?.(closestIndex);
 
   if(this.textureManager)
   {

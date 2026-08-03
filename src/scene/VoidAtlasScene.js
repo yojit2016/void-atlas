@@ -6,6 +6,7 @@ import createAxisPole from "./AxisPole";
 import CameraRig from "./CameraRig";
 import CosmicCarousel3D from "./CosmicCarousel3D";
 import ScrollController from "./ScrollController";
+import PostProcessing from "./PostProcessing";
 export default class VoidAtlasScene {
   constructor(canvas) {
     this.canvas = canvas;
@@ -48,6 +49,39 @@ export default class VoidAtlasScene {
     );
 
     this.renderer.setClearColor("#020208");
+  this.postProcessing =
+    new PostProcessing(
+    this.renderer,
+    this.scene,
+    this.camera
+    );
+
+  this.carousel.onFocusChange = () => {
+
+    gsap.to(
+      this.postProcessing.bloomPass,
+      {
+        strength: 0.7,
+        duration: 0.3,
+        ease: "power2.out",
+        overwrite: "auto",
+
+        onComplete: () => {
+
+        gsap.to(
+          this.postProcessing.bloomPass,
+          {
+            strength: 0.4,
+            duration: 0.5,
+            ease: "power2.in"
+          }
+        );
+
+      }
+    }
+  );
+
+};
 
     // =========================
     // Raycaster (NEW)
@@ -177,7 +211,7 @@ export default class VoidAtlasScene {
     this.carousel.updateFocus(this.camera);
     this.cameraRig.update(delta);
 
-    this.renderer.render(this.scene, this.camera);
+    this.postProcessing.render();
     
     this.animationFrame = 
     requestAnimationFrame(this.animate);
@@ -190,6 +224,10 @@ export default class VoidAtlasScene {
     );
 
     this.renderer.setSize(
+      window.innerWidth,
+      window.innerHeight
+    );
+    this.postProcessing.setSize(
       window.innerWidth,
       window.innerHeight
     );
@@ -215,7 +253,7 @@ export default class VoidAtlasScene {
     if (this.scrollController) {
       this.scrollController.destroy();
     }
-
+    this.postProcessing.dispose();
     this.renderer.dispose();
   }
 }
