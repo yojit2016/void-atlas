@@ -1,49 +1,98 @@
 import * as THREE from "three";
 
-export default function createStarField() {
-  const starCount = 8000;
+export default class StarField3D {
+  constructor() {
+    const starCount = 4000;
 
-  const positions = new Float32Array(starCount * 3);
+    this.positions = new Float32Array(
+      starCount * 3
+    );
 
-  for (let i = 0; i < starCount; i++) {
-    let x, y, z;
-    let distance = 0;
+    this.originalPositions =
+      new Float32Array(starCount * 3);
 
-    while (distance < 250) {
-      x = (Math.random() - 0.5) * 4000;
-      y = (Math.random() - 0.5) * 4000;
-      z = (Math.random() - 0.5) * 4000;
+    for (let i = 0; i < starCount; i++) {
+      const x =
+        (Math.random() - 0.5) * 4000;
 
-      distance = Math.sqrt(
-        x * x +
-        y * y +
-        z * z
-      );
+      const y =
+        (Math.random() - 0.5) * 2500;
+
+      const z =
+        (Math.random() - 0.5) * 4000;
+
+      this.positions[i * 3] = x;
+      this.positions[i * 3 + 1] = y;
+      this.positions[i * 3 + 2] = z;
+
+      this.originalPositions[i * 3] = x;
+      this.originalPositions[i * 3 + 1] = y;
+      this.originalPositions[i * 3 + 2] = z;
     }
 
-    positions[i * 3] = x;
-    positions[i * 3 + 1] = y;
-    positions[i * 3 + 2] = z;
+    const geometry =
+      new THREE.BufferGeometry();
+
+    geometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(
+        this.positions,
+        3
+      )
+    );
+
+    const material =
+      new THREE.PointsMaterial({
+        color: "#ffffff",
+        size: 2,
+        sizeAttenuation: true,
+        transparent: true,
+        opacity: 0.85,
+      });
+
+    this.geometry = geometry;
+
+    this.points =
+      new THREE.Points(
+        geometry,
+        material
+      );
+
+    this.warpFactor = 1.0;
   }
 
-  const geometry = new THREE.BufferGeometry();
+  update(delta) {
+    const positions = this.positions;
 
-  geometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(positions, 3)
-  );
+    const speed =
+      80 * this.warpFactor;
 
-  const material = new THREE.PointsMaterial({
-    color: 0xffffff,
-    size: 0.15,
-    transparent: true,
-    opacity: 0.9,
-    sizeAttenuation: true,
-    depthWrite: false,
-  });
+    for (
+      let i = 0;
+      i < positions.length;
+      i += 3
+    ) {
+      positions[i + 2] +=
+        delta * speed;
 
-  return new THREE.Points(
-    geometry,
-    material
-  );
+      if (positions[i + 2] > 850) {
+        positions[i] =
+          (Math.random() - 0.5) *
+          4000;
+
+        positions[i + 1] =
+          (Math.random() - 0.5) *
+          2500;
+
+        positions[i + 2] = -2000;
+      }
+    }
+
+    this.geometry.attributes.position.needsUpdate =
+      true;
+  }
+
+  setWarp(factor) {
+    this.warpFactor = factor;
+  }
 }
