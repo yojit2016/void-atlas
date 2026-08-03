@@ -16,6 +16,11 @@ export default class ScrollController {
         window.addEventListener("touchmove",this.handleTouchMove,{passive: true});
         //Initialize immediately
         this.handleScroll();
+
+        this.lastProgress = 0;
+        this.lastTimestamp = performance.now();
+        this.onWarp = null;
+        
     }
 
     clamp(value){
@@ -24,7 +29,7 @@ export default class ScrollController {
     computeProgress(){
         const maxScroll = documentElement.scrollHeight - window.innerHeight;
 
-        if(maxScroll <= 0) return0;
+        if(maxScroll <= 0) return 0;
 
         return this.clamp(window.scrollY / maxScroll);
 
@@ -38,7 +43,20 @@ export default class ScrollController {
         this.callbacks.forEach((callback) => callback(this.progress));
     }
     handleScroll(){
-        this.setProgress(this.computeProgress());
+        const progress = this.computeProgress();
+
+        const now = performance.now();
+        const timeDelta = Math.max(now - this.lastTimestamp,1);
+
+        const velocity = Math.abs(progress - this.lastProgress)/ timeDelta;
+
+        this.lastProgress = progress;
+        this.lastTimestamp = now;
+
+        if(velocity > 0.003){
+            this.onWarp?.(Math.min(velocity*80,5.0));
+        }
+        this.setProgress(progress);
     }
     handleTouchStart(event){
         if (event.touches.length === 0) return;
