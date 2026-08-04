@@ -1,18 +1,45 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import VoidAtlasScene from "../../scene/VoidAtlasScene";
 import { useCosmicData } from "../../hooks/useCosmicData";
+
+function isWebGLSupported() {
+  try {
+    const canvas = document.createElement("canvas");
+
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext("webgl2") ||
+        canvas.getContext("webgl"))
+    );
+  } catch (e) {
+    return false;
+  }
+}
 
 export default function SceneCanvas() {
   const canvasRef = useRef(null);
   const sceneRef = useRef(null);
 
+  const [webGLSupported, setWebGLSupported] =
+    useState(true);
+
   const { images } = useCosmicData();
 
-  // Create Three.js scene 
+  // =========================
+  // Create Three.js scene
+  // =========================
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    const scene = new VoidAtlasScene(canvasRef.current);
+    if (!isWebGLSupported()) {
+      setWebGLSupported(false);
+      return;
+    }
+
+    const scene = new VoidAtlasScene(
+      canvasRef.current
+    );
+
     sceneRef.current = scene;
 
     return () => {
@@ -21,15 +48,90 @@ export default function SceneCanvas() {
     };
   }, []);
 
-  // Apply NASA images when they finish loading
+  // =========================
+  // Apply NASA images
+  // =========================
   useEffect(() => {
     if (!sceneRef.current) return;
-    if (!images || images.length === 0) return;
-    console.log("Images recieved:", images);
+    if (!images || images.length === 0)
+      return;
 
-    sceneRef.current.carousel.setImages(images);
+    sceneRef.current.carousel.setImages(
+      images
+    );
   }, [images]);
 
+  // =========================
+  // WebGL Fallback
+  // =========================
+  if (!webGLSupported) {
+    return (
+      <div
+        className="fixed inset-0 overflow-y-auto"
+        style={{
+          background:
+            "linear-gradient(180deg, #020208 0%, #0a0a1a 50%, #020208 100%)",
+        }}
+      >
+        <div className="max-w-4xl mx-auto px-8 py-24">
+          <p
+            className="text-xs uppercase tracking-widest mb-12"
+            style={{
+              color:
+                "rgba(100,220,255,0.5)",
+            }}
+          >
+            Interactive 3D mode requires
+            WebGL — showing archive view
+          </p>
+
+          <div className="grid grid-cols-2 gap-6">
+            {images.map((img) => (
+              <a
+                key={img.id}
+                href={img.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block"
+              >
+                <div
+                  className="aspect-video overflow-hidden mb-3"
+                  style={{
+                    border:
+                      "1px solid rgba(100,220,255,0.15)",
+                  }}
+                >
+                  <img
+                    src={img.image}
+                    alt={img.title}
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
+                  />
+                </div>
+
+                <p className="text-sm font-light tracking-wide text-white/70 group-hover:text-white/90 transition-colors">
+                  {img.title}
+                </p>
+
+                <p
+                  className="text-xs mt-1"
+                  style={{
+                    color:
+                      "rgba(100,220,255,0.5)",
+                  }}
+                >
+                  {img.sourceName}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================
+  // WebGL Canvas
+  // =========================
   return (
     <canvas
       ref={canvasRef}
