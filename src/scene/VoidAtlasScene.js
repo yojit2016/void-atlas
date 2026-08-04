@@ -84,7 +84,9 @@ export default class VoidAtlasScene {
     this.scene.add(this.carousel.group);
     this.carousel.group.rotation.x = 0.25;
 
+    // =========================
     // Bloom pulse when focus changes
+    // =========================
     this.carousel.onFocusChange = () => {
       gsap.to(this.postProcessing.bloomPass, {
         strength: 0.7,
@@ -181,9 +183,7 @@ export default class VoidAtlasScene {
       this.renderer.domElement.getBoundingClientRect();
 
     this.pointer.x =
-      ((event.clientX - rect.left) / rect.width) *
-        2 -
-      1;
+      ((event.clientX - rect.left) / rect.width) * 2 - 1;
 
     this.pointer.y =
       -(
@@ -226,9 +226,28 @@ export default class VoidAtlasScene {
     // Update Components
     // =========================
     this.starField.update(delta);
+
     this.axisPole.update(delta);
+
     this.carousel.update(delta);
     this.carousel.updateFocus(this.camera);
+
+    // ---------- NEW ----------
+    if (this.carousel.labels) {
+      if (
+        !this.carousel.labels.group.parent
+      ) {
+        this.scene.add(
+          this.carousel.labels.group
+        );
+      }
+
+      this.carousel.labels.update(
+        this.camera
+      );
+    }
+    // -------------------------
+
     this.cameraRig.update(delta);
 
     // =========================
@@ -278,6 +297,14 @@ export default class VoidAtlasScene {
 
     if (this.scrollController) {
       this.scrollController.destroy();
+    }
+
+    if (this.carousel) {
+      if (this.carousel.labels) {
+        this.carousel.labels.dispose();
+      }
+
+      this.carousel.dispose();
     }
 
     this.postProcessing.dispose();
