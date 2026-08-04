@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { gsap } from "gsap";
 import TextureManager from "./TextureManager";
+import OrbitLabels from "./OrbitLabels";
 
 export default class CosmicCarousel3D {
   constructor() {
@@ -21,6 +22,7 @@ export default class CosmicCarousel3D {
     
     this.focusedIndex = -1;
     this.textureManager = null;
+    this.labels = null;
 
     this.build();
   }
@@ -88,43 +90,45 @@ export default class CosmicCarousel3D {
   // NEW
   // Apply image textures to every orbit node
   // =====================================================
-  setImages(images) {
-    
-    if(!images || !images.length)
-      return;
-    this.images = images;
-    
-    if(this.textureManager)
-    {
-      this.textureManager.dispose();
-    }
+ setImages(images) {
+  if (!images || !images.length) return;
 
-    this.textureManager = new TextureManager(images);
-    this.textureManager.onTextureReady = 
-    (index,texture) => {const node = this.nodes[index];
-      if(!node) return;
-      node.material.map = texture;
-      node.material.color.set("#ffffff");
-      node.material.transparent = false;
-      node.material.opacity = 1;
-      node.material.needsUpdate = true;
+  this.images = images;
 
-      node.userData = {
-        title: images[index].title,
-        sourceUrl: images[index].sourceUrl,
-        sourceName: images[index].sourceName,
-        image: images[index],
-      
-      };
-
-    };
-
-    this.nodes.forEach((node, index)=> {
-      node.material.map = 
-      this.textureManager.getTexture(index);
-      node.material.needsUpdate = true;
-    });
+  if (this.textureManager) {
+    this.textureManager.dispose();
   }
+
+  this.textureManager = new TextureManager(images);
+
+  this.textureManager.onTextureReady = (index, texture) => {
+    const node = this.nodes[index];
+    if (!node) return;
+
+    node.material.map = texture;
+    node.material.color.set("#ffffff");
+    node.material.transparent = false;
+    node.material.opacity = 1;
+    node.material.needsUpdate = true;
+
+    node.userData = {
+      title: images[index].title,
+      sourceUrl: images[index].sourceUrl,
+      sourceName: images[index].sourceName,
+      image: images[index],
+    };
+  };
+
+  this.nodes.forEach((node, index) => {
+    node.material.map = this.textureManager.getTexture(index);
+    node.material.needsUpdate = true;
+  });
+
+  // ---------- Orbit Labels ----------
+  if (!this.labels) {
+    this.labels = new OrbitLabels(this.nodes, images);
+  }
+}
   
 
   // =====================================================
@@ -157,6 +161,9 @@ export default class CosmicCarousel3D {
   if(this.textureManager)
   {
     this.textureManager.setFocused(this.focusedIndex);
+    if (this.labels) {
+      this.labels.setFocused(this.focusedIndex);
+    }
   }
 
   this.nodes.forEach((node, i) => {
@@ -203,6 +210,10 @@ dispose() {
     if (this.textureManager)
     {
       this.textureManager.dispose();
+    }
+
+    if (this.labels) {
+      this.labels.dispose();
     }
   }
 
