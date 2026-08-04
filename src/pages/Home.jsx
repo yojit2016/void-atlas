@@ -1,4 +1,4 @@
-import SceneCanvas from "../components/SceneCanvas";
+import SceneCanvas from "../components/canvas/SceneCanvas";
 
 export default function Home() {
 
