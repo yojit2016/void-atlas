@@ -27,7 +27,7 @@ export default class ScrollController {
         return THREE.MathUtils.clamp(value,0,1);
     }
     computeProgress(){
-        const maxScroll = documentElement.scrollHeight - window.innerHeight;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
 
         if(maxScroll <= 0) return 0;
 
