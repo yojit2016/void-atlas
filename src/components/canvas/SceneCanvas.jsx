@@ -17,7 +17,7 @@ function isWebGLSupported() {
   }
 }
 
-export default function SceneCanvas() {
+export default function SceneCanvas({ onSceneReady }) {
   const canvasRef = useRef(null);
   const sceneRef = useRef(null);
 
@@ -45,11 +45,15 @@ export default function SceneCanvas() {
 
     sceneRef.current = scene;
 
+    if (onSceneReady) {
+      onSceneReady(scene.scrollController);
+    }
+
     return () => {
       scene.destroy();
       sceneRef.current = null;
     };
-  }, []);
+  }, [onSceneReady]);
 
   // =========================
   // Apply NASA images
