@@ -77,6 +77,11 @@ export default class VoidAtlasScene {
     this.scene.add(this.axisPole);
     this.axisPole.position.y = -50;
 
+    // Ambient Helix Light
+    const helixLight = new THREE.PointLight(0x00d4ff, 0.8, 600);
+    helixLight.position.set(0, 0, 0);
+    this.scene.add(helixLight);
+
     // =========================
     // Orbit Carousel
     // =========================
@@ -87,16 +92,16 @@ export default class VoidAtlasScene {
     // =========================
     // Bloom pulse when focus changes
     // =========================
-    this.carousel.onFocusChange = () => {
+    this.carousel.onFocusChange = (index) => {
       gsap.to(this.postProcessing.bloomPass, {
-        strength: 0.7,
-        duration: 0.3,
+        strength: 0.65,
+        duration: 0.25,
         ease: "power2.out",
         overwrite: "auto",
         onComplete: () => {
           gsap.to(this.postProcessing.bloomPass, {
-            strength: 0.4,
-            duration: 0.5,
+            strength: 0.35,
+            duration: 0.6,
             ease: "power2.in",
           });
         },
