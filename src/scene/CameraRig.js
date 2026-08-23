@@ -15,16 +15,15 @@ export default class CameraRig {
 
     // Base camera position
     this.baseX = 0;
-    this.baseY = 0;
-    this.baseZ = 800;
+    this.baseY = 30;
+    this.baseZ = 750;
 
     this.camera.position.set(
       this.baseX,
       this.baseY,
       this.baseZ
     );
-    this.camera.rotation.x = -0.25;
-
+    this.camera.rotation.x = -0.3;
 
     // Parent camera to rig
     this.group.add(this.camera);
@@ -37,7 +36,7 @@ export default class CameraRig {
     this.currentY = 0;
 
     this.lookStrength = 5;
-    this.smoothing = 0.08;
+    this.smoothing = 0.04;
   }
 
   setMouse(x, y) {
@@ -61,7 +60,7 @@ export default class CameraRig {
 
     this.camera.position.y =
       this.baseY +
-      this.currentY * this.lookStrength;
+      this.currentY * this.lookStrength * 0.5;
   }
 
   handleResize(width, height) {
