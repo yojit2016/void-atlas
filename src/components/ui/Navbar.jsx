@@ -1,56 +1,76 @@
-export default function Navbar() {
+import React from 'react';
+
+export default function Navbar({ scrollController }) {
+  const handleNav = (section) => {
+    if (scrollController?.scrollToSection) {
+      scrollController.scrollToSection(section.toLowerCase());
+    }
+  };
+
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6"
-      style={{ pointerEvents: "auto" }}
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between"
+      style={{
+        padding: '24px 40px',
+        pointerEvents: 'auto',
+      }}
     >
       {/* Logo */}
       <div className="flex items-center gap-3">
         <div
-          className="w-2 h-2 rounded-full"
           style={{
-            background: "#00d4ff",
-            boxShadow: "0 0 8px #00d4ff, 0 0 16px #00d4ff44",
+            width: '7px',
+            height: '7px',
+            borderRadius: '50%',
+            background: '#00d4ff',
+            boxShadow: '0 0 10px #00d4ff, 0 0 20px #00d4ff66',
+            animation: 'pulse 2s ease-in-out infinite',
           }}
         />
         <span
           style={{
-            fontFamily: "'Space Grotesk', 'Inter', sans-serif",
-            fontSize: "13px",
-            letterSpacing: "0.35em",
+            fontSize: '12px',
+            letterSpacing: '0.4em',
             fontWeight: 300,
-            color: "rgba(255,255,255,0.9)",
-            textTransform: "uppercase",
+            color: 'rgba(255,255,255,0.88)',
+            textTransform: 'uppercase',
+            fontFamily: "'Space Grotesk', sans-serif",
           }}
         >
           Void Atlas
         </span>
       </div>
 
-      {/* Nav links */}
-      <div className="flex items-center gap-10">
-        {["Deepfield", "Nebulae", "Signals"].map((label) => (
+      {/* Nav tabs */}
+      <div style={{ display: 'flex', gap: '36px', alignItems: 'center' }}>
+        {[
+          { label: 'Deepfield', section: 'deepfield' },
+          { label: 'Nebulae', section: 'nebulae' },
+          { label: 'Signals', section: 'signals' },
+        ].map(({ label, section }) => (
           <button
-            key={label}
+            key={section}
+            onClick={() => handleNav(section)}
             style={{
-              fontFamily: "'Space Grotesk', 'Inter', sans-serif",
-              fontSize: "11px",
-              letterSpacing: "0.25em",
+              fontSize: '11px',
+              letterSpacing: '0.22em',
               fontWeight: 400,
-              color: "rgba(255,255,255,0.45)",
-              textTransform: "uppercase",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              transition: "color 0.3s ease, text-shadow 0.3s ease",
+              color: 'rgba(255,255,255,0.4)',
+              textTransform: 'uppercase',
+              background: 'none',
+              border: 'none',
+              cursor: 'none',
+              padding: '4px 0',
+              transition: 'color 0.3s, text-shadow 0.3s',
+              fontFamily: "'Space Grotesk', sans-serif",
             }}
             onMouseEnter={(e) => {
-              e.target.style.color = "rgba(0,212,255,0.9)";
-              e.target.style.textShadow = "0 0 12px rgba(0,212,255,0.5)";
+              e.currentTarget.style.color = 'rgba(0,212,255,0.9)';
+              e.currentTarget.style.textShadow = '0 0 14px rgba(0,212,255,0.6)';
             }}
             onMouseLeave={(e) => {
-              e.target.style.color = "rgba(255,255,255,0.45)";
-              e.target.style.textShadow = "none";
+              e.currentTarget.style.color = 'rgba(255,255,255,0.4)';
+              e.currentTarget.style.textShadow = 'none';
             }}
           >
             {label}
