@@ -12,9 +12,8 @@ export default function MainLayout() {
       {/* Atmosphere: Subtle vignette and atmospheric haze throughout */}
       <div className="fixed inset-0 z-5 pointer-events-none bg-radial-at-center from-transparent via-black/5 to-black/20" />
       
-      {/* UI: Navbar and cursor at top */}
+      {/* UI: Star Cursor */}
       <StarCursor />
-      <Navbar />
       
       {/* Content: Home/gallery at dynamic z-layers */}
       <Home />
