@@ -12,7 +12,7 @@ function checkImageDimensions(url) {
         width: img.naturalWidth,
         height: img.naturalHeight,
         aspectRatio: img.naturalWidth / img.naturalHeight,
-        valid: img.naturalWidth >= 1280,
+        valid: img.naturalWidth >= 300,
       });
     };
 

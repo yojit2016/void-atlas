@@ -120,9 +120,20 @@ export default class CosmicCarousel3D {
   };
 
   this.nodes.forEach((node, index) => {
+    if (images[index]) {
+      node.userData = {
+        title: images[index].title,
+        sourceUrl: images[index].sourceUrl,
+        sourceName: images[index].sourceName,
+        image: images[index],
+      };
+    }
     node.material.map = this.textureManager.getTexture(index);
     node.material.needsUpdate = true;
   });
+
+  // Start loading all textures upfront
+  this.textureManager.loadAll();
 
   // ---------- Orbit Labels ----------
   if (!this.labels) {

@@ -1,76 +1,98 @@
 export const fallbackSpaceData = [
   {
     id: 1,
-
     title: "Pillars of Creation",
-
-    image:
-      "https://images-assets.nasa.gov/image/PIA12348/PIA12348~orig.jpg",
-
-    description:
-      "Iconic pillars of gas and dust inside the Eagle Nebula.",
-
+    image: "https://images-assets.nasa.gov/image/PIA12348/PIA12348~medium.jpg",
+    description: "Iconic pillars of gas and dust inside the Eagle Nebula captured in sharp detail.",
     captureDate: "2024-01-01",
-
     telescope: "Hubble Space Telescope",
-
     objectType: "Nebula",
-
     constellation: "Serpens",
-
-    sourceUrl:
-      "https://images.nasa.gov/details/PIA12348",
-
+    sourceUrl: "https://images.nasa.gov/details/PIA12348",
     sourceName: "NASA Image Library",
   },
-
   {
     id: 2,
-
     title: "Andromeda Galaxy",
-
-    image:
-      "https://images-assets.nasa.gov/image/PIA04921/PIA04921~orig.jpg",
-
-    description:
-      "Nearest major galaxy to the Milky Way.",
-
+    image: "https://images-assets.nasa.gov/image/PIA04921/PIA04921~medium.jpg",
+    description: "Nearest major spiral galaxy to our Milky Way, spanning over 220,000 light-years.",
     captureDate: "2024-02-12",
-
     telescope: "Spitzer Space Telescope",
-
     objectType: "Galaxy",
-
     constellation: "Andromeda",
-
-    sourceUrl:
-      "https://images.nasa.gov/details/PIA04921",
-
+    sourceUrl: "https://images.nasa.gov/details/PIA04921",
     sourceName: "NASA Image Library",
   },
-
   {
     id: 3,
-
     title: "Cosmic Cliffs",
-
-    image:
-      "https://images-assets.nasa.gov/image/PIA25569/PIA25569~orig.jpg",
-
-    description:
-      "James Webb infrared view of the Carina Nebula.",
-
+    image: "https://images-assets.nasa.gov/image/PIA25569/PIA25569~medium.jpg",
+    description: "James Webb Space Telescope NIRCam image of the edge of stellar cavern in Carina Nebula.",
     captureDate: "2024-03-20",
-
     telescope: "James Webb Space Telescope",
-
     objectType: "Nebula",
-
     constellation: "Carina",
-
-    sourceUrl:
-      "https://images.nasa.gov/details/PIA25569",
-
+    sourceUrl: "https://images.nasa.gov/details/PIA25569",
     sourceName: "NASA Image Library",
   },
+  {
+    id: 4,
+    title: "Orion Nebula",
+    image: "https://images-assets.nasa.gov/image/PIA04225/PIA04225~medium.jpg",
+    description: "A turbulent star-forming region located 1,350 light-years from Earth.",
+    captureDate: "2024-04-15",
+    telescope: "Hubble Space Telescope",
+    objectType: "Nebula",
+    constellation: "Orion",
+    sourceUrl: "https://images.nasa.gov/details/PIA04225",
+    sourceName: "NASA Image Library",
+  },
+  {
+    id: 5,
+    title: "Southern Ring Nebula",
+    image: "https://images-assets.nasa.gov/image/PIA25433/PIA25433~medium.jpg",
+    description: "Planetary nebula surrounding a dying star, captured by JWST's MIRI instrument.",
+    captureDate: "2024-05-01",
+    telescope: "James Webb Space Telescope",
+    objectType: "Planetary Nebula",
+    constellation: "Vela",
+    sourceUrl: "https://images.nasa.gov/details/PIA25433",
+    sourceName: "NASA Image Library",
+  },
+  {
+    id: 6,
+    title: "Tarantula Nebula",
+    image: "https://images-assets.nasa.gov/image/PIA25442/PIA25442~medium.jpg",
+    description: "The largest and brightest star-forming region in the Local Group of galaxies.",
+    captureDate: "2024-06-10",
+    telescope: "James Webb Space Telescope",
+    objectType: "Emission Nebula",
+    constellation: "Dorado",
+    sourceUrl: "https://images.nasa.gov/details/PIA25442",
+    sourceName: "NASA Image Library",
+  },
+  {
+    id: 7,
+    title: "Ring Nebula Messier 57",
+    image: "https://images-assets.nasa.gov/image/PIA17006/PIA17006~medium.jpg",
+    description: "Classic planetary nebula created by a shell of ionized gas expelled by a red giant star.",
+    captureDate: "2024-07-04",
+    telescope: "Hubble Space Telescope",
+    objectType: "Planetary Nebula",
+    constellation: "Lyra",
+    sourceUrl: "https://images.nasa.gov/details/PIA17006",
+    sourceName: "NASA Image Library",
+  },
+  {
+    id: 8,
+    title: "Crab Nebula Remnant",
+    image: "https://images-assets.nasa.gov/image/PIA21469/PIA21469~medium.jpg",
+    description: "Supernova remnant resulting from a stellar explosion recorded in the year 1054.",
+    captureDate: "2024-08-01",
+    telescope: "Chandra X-ray Observatory",
+    objectType: "Supernova Remnant",
+    constellation: "Taurus",
+    sourceUrl: "https://images.nasa.gov/details/PIA21469",
+    sourceName: "NASA Image Library",
+  }
 ];

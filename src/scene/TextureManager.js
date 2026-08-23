@@ -28,6 +28,13 @@ export default class TextureManager {
   }
 
   // =====================================================
+  // Load all node textures upfront
+  // =====================================================
+  loadAll() {
+    this.images.forEach((_, i) => this.loadIndex(i));
+  }
+
+  // =====================================================
   // Returns cached texture immediately
   // =====================================================
   getTexture(index) {
