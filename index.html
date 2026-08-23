@@ -1,11 +1,36 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Void Atlas</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>Void Atlas — Interactive Deep Space Observatory</title>
+    <meta name="title" content="Void Atlas — Interactive Deep Space Observatory" />
+    <meta name="description" content="An Active Theory-style scroll-driven interactive space observatory visualizing NASA APOD, Hubble, and JWST telemetry." />
+    <meta name="theme-color" content="#020208" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://void-atlas.vercel.app/" />
+    <meta property="og:title" content="Void Atlas — Interactive Deep Space Observatory" />
+    <meta property="og:description" content="Cinematic particle-heavy 3D visualization of astronomical imagery from NASA, Hubble, and JWST." />
+    <meta property="og:image" content="/favicon.svg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Void Atlas — Interactive Deep Space Observatory" />
+    <meta property="twitter:description" content="Scroll-driven 3D cosmic exploration experience." />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet" />
   </head>
-  <body>
+  <body class="bg-black text-white selection:bg-cyan-500 selection:text-black">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
