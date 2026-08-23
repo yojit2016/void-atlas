@@ -1,37 +1,31 @@
-/* @tailwind config */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-* { margin:0; padding:0; box-sizing:border-box; }
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 html {
   overflow-y: auto;
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
-body {
-  overflow-x: hidden;
-  background: black;
-} 
-* {
-  scrollbar-width: none; /* Firefox */
-  
-}
-*::-webkit-scrollbar {
-  display: none;
-}
-#root {
-width: 100%;
-min-height: 100%;
-background: #020308;
-overflow-x: hidden;
-font-family: 'Inter', sans-serif;
-color:white
-  }
 
 body {
-  cursor:none;
+  background: #020208;
+  color: white;
+  overflow-x: hidden;
+  cursor: none;
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
 }
+
 ::-webkit-scrollbar {
   display: none;
+}
+
+* {
+  scrollbar-width: none;
 }
