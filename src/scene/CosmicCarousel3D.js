@@ -8,8 +8,8 @@ export default class CosmicCarousel3D {
     this.focusedIndex = -1;
     this.onFocusChange = null;
 
-    // Layout — tuned for camera at z=800, pitch -0.25:
-    this.orbitRadius = 280;
+    // Layout — tuned for galaxy view:
+    this.orbitRadius = 260;
     this.nodeWidth = 96;
     this.nodeHeight = 62;
   }
@@ -39,10 +39,10 @@ export default class CosmicCarousel3D {
 
       plane.position.set(
         Math.cos(angle) * this.orbitRadius,
-        0,
+        45, // 45 units above galaxy plane — nodes float above the disk
         Math.sin(angle) * this.orbitRadius
       );
-      plane.lookAt(new THREE.Vector3(0, 0, 800));
+      plane.lookAt(new THREE.Vector3(0, 180, 620));
 
       // Border frame — thin PlaneGeometry slightly larger than image
       // Color: #00d4ff at opacity 0.25
@@ -67,8 +67,8 @@ export default class CosmicCarousel3D {
       this.nodes.push(plane);
     }
 
-    // Tilt entire ring to match camera angle
-    this.group.rotation.x = 0.25;
+    // Orbit ring is flat in world space
+    this.group.rotation.x = 0;
   }
 
   setImages(images) {
