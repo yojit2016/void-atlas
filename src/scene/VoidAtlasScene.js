@@ -127,19 +127,28 @@ export default class VoidAtlasScene {
     this.unsubscribeScroll =
       this.scrollController.onProgressChange(
         (progress) => {
+          // Drive camera rig deep into space along Z path
           gsap.to(this.cameraRig.group.position, {
-            z: THREE.MathUtils.lerp(
-              0,
-              -300,
-              progress
-            ),
+            z: THREE.MathUtils.lerp(0, -1350, progress),
+            x: Math.sin(progress * Math.PI) * 90,
+            y: Math.cos(progress * Math.PI) * 40,
             duration: 0.8,
             ease: "power2.out",
             overwrite: "auto",
           });
 
+          // Cinematic pitch and tilt relative to scroll
+          gsap.to(this.cameraRig.group.rotation, {
+            x: Math.sin(progress * Math.PI) * -0.12,
+            z: Math.sin(progress * Math.PI * 2) * 0.05,
+            duration: 0.8,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+
+          // Rotate orbit carousel around central axis
           gsap.to(this.carousel.group.rotation, {
-            y: progress * Math.PI * 2,
+            y: progress * Math.PI * 2.5,
             duration: 0.8,
             ease: "power2.out",
             overwrite: "auto",
