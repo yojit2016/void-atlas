@@ -47,9 +47,9 @@ export default class PostProcessing {
     // Pass 2 — bloom
     this.bloomPass = new UnrealBloomPass(
       new THREE.Vector2(width, height),
-      0.35,   // strength
-      0.8,    // radius
-      0.3     // threshold
+      0.45,   // strength
+      1.0,    // radius
+      0.25    // threshold
     );
     this.composer.addPass(this.bloomPass);
 
