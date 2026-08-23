@@ -27,119 +27,128 @@ export default class CosmicCarousel3D {
     this.build();
   }
 
-  build() {
-    for (
-      let layer = 0;
-      layer < this.layerCount;
-      layer++
-    ) {
-      const layerGroup = new THREE.Group();
-
-      layerGroup.position.z =
-        -(layer * this.layerSpacing);
-
-      for (
-        let i = 0;
-        i < this.nodesPerLayer;
-        i++
-      ) {
-        const angle =
-          (i / this.nodesPerLayer) *
-          Math.PI *
-          2;
-
-        const geometry = new THREE.PlaneGeometry(
-          this.nodeWidth,
-          this.nodeHeight
-        );
-
-        const material =
-          new THREE.MeshBasicMaterial({
-            color: "#4a4a4a",
-            transparent: true,
-            opacity: 0.65,
-            side: THREE.DoubleSide,
-          });
-
-        const plane = new THREE.Mesh(
-          geometry,
-          material
-        );
-
-        plane.position.set(
-          Math.cos(angle) *
-            this.orbitRadius,
-          0,
-          Math.sin(angle) *
-            this.orbitRadius
-        );
-
-        // Face camera position
-        plane.lookAt(new THREE.Vector3(0, 0, 800));
-
-        layerGroup.add(plane);
-
-        this.nodes.push(plane);
-      }
-
-      this.group.add(layerGroup);
+  build(count = 6) {
+    // Clear previous elements
+    while(this.group.children.length > 0){
+      const child = this.group.children[0];
+      this.group.remove(child);
     }
+    this.nodes = [];
+    this.nodesPerLayer = Math.max(count, 6);
+
+    const layerGroup = new THREE.Group();
+
+    for (let i = 0; i < this.nodesPerLayer; i++) {
+      const angle = (i / this.nodesPerLayer) * Math.PI * 2;
+
+      // Card geometry
+      const geometry = new THREE.PlaneGeometry(
+        this.nodeWidth,
+        this.nodeHeight
+      );
+
+      const material = new THREE.MeshBasicMaterial({
+        color: "#0a0f1d",
+        transparent: true,
+        opacity: 0.85,
+        side: THREE.DoubleSide,
+      });
+
+      const plane = new THREE.Mesh(geometry, material);
+
+      plane.position.set(
+        Math.cos(angle) * this.orbitRadius,
+        0,
+        Math.sin(angle) * this.orbitRadius
+      );
+
+      // Face camera position at center
+      plane.lookAt(new THREE.Vector3(0, 0, 800));
+
+      // Create glowing neon border outline
+      const borderGeo = new THREE.PlaneGeometry(
+        this.nodeWidth + 2.5,
+        this.nodeHeight + 2.5
+      );
+      const borderMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color("#00d2ff"),
+        transparent: true,
+        opacity: 0.4,
+        side: THREE.DoubleSide,
+      });
+      const borderMesh = new THREE.Mesh(borderGeo, borderMat);
+      borderMesh.position.set(0, 0, -0.2);
+      plane.add(borderMesh);
+      plane.userData.borderMesh = borderMesh;
+
+      layerGroup.add(plane);
+      this.nodes.push(plane);
+    }
+
+    this.group.add(layerGroup);
   }
 
   // =====================================================
-  // NEW
-  // Apply image textures to every orbit node
+  // Apply image textures to every orbit node dynamically
   // =====================================================
- setImages(images) {
-  if (!images || !images.length) return;
+  setImages(images) {
+    if (!images || !images.length) return;
 
-  this.images = images;
+    this.images = images;
+    
+    // Rebuild carousel nodes to match exact count of fetched images
+    this.build(images.length);
 
-  if (this.textureManager) {
-    this.textureManager.dispose();
-  }
+    if (this.labels) {
+      this.labels.dispose();
+      this.labels = null;
+    }
 
-  this.textureManager = new TextureManager(images);
+    if (this.textureManager) {
+      this.textureManager.dispose();
+    }
 
-  this.textureManager.onTextureReady = (index, texture) => {
-    const node = this.nodes[index];
-    if (!node) return;
+    this.textureManager = new TextureManager(images);
 
-    node.material.map = texture;
-    node.material.color.set("#ffffff");
-    node.material.transparent = false;
-    node.material.opacity = 1;
-    node.material.needsUpdate = true;
+    this.textureManager.onTextureReady = (index, texture) => {
+      const node = this.nodes[index];
+      if (!node) return;
 
-    node.userData = {
-      title: images[index].title,
-      sourceUrl: images[index].sourceUrl,
-      sourceName: images[index].sourceName,
-      image: images[index],
-    };
-  };
+      node.material.map = texture;
+      node.material.color.set("#ffffff");
+      node.material.transparent = false;
+      node.material.opacity = 1;
+      node.material.needsUpdate = true;
 
-  this.nodes.forEach((node, index) => {
-    if (images[index]) {
       node.userData = {
+        ...node.userData,
         title: images[index].title,
         sourceUrl: images[index].sourceUrl,
         sourceName: images[index].sourceName,
         image: images[index],
       };
-    }
-    node.material.map = this.textureManager.getTexture(index);
-    node.material.needsUpdate = true;
-  });
+    };
 
-  // Start loading all textures upfront
-  this.textureManager.loadAll();
+    this.nodes.forEach((node, index) => {
+      if (images[index]) {
+        node.userData = {
+          ...node.userData,
+          title: images[index].title,
+          sourceUrl: images[index].sourceUrl,
+          sourceName: images[index].sourceName,
+          image: images[index],
+        };
+      }
+      node.material.map = this.textureManager.getTexture(index);
+      node.material.needsUpdate = true;
+    });
 
-  // ---------- Orbit Labels ----------
-  if (!this.labels) {
+    // Start loading all textures upfront
+    this.textureManager.loadAll();
+
+    // ---------- Orbit Labels ----------
     this.labels = new OrbitLabels(this.nodes, images);
   }
-}
   
 
   // =====================================================
