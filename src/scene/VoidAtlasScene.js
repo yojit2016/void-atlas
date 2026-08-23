@@ -2,7 +2,7 @@ import * as THREE from "three";
 import gsap from "gsap";
 
 import StarField3D from "./StarField3D";
-import createAxisPole from "./AxisPole";
+import GalaxyCore from "./AxisPole";
 import CameraRig from "./CameraRig";
 import CosmicCarousel3D from "./CosmicCarousel3D";
 import ScrollController from "./ScrollController";
@@ -71,16 +71,16 @@ export default class VoidAtlasScene {
     this.scene.add(this.starField.points);
 
     // =========================
-    // Helix
+    // Galaxy Core
     // =========================
-    this.axisPole = createAxisPole();
-    this.scene.add(this.axisPole);
-    this.axisPole.position.y = -50;
+    this.galaxyCore = new GalaxyCore();
+    this.galaxyCore.group.rotation.x = -0.42;
+    this.scene.add(this.galaxyCore.group);
 
-    // Ambient Helix Light
-    const helixLight = new THREE.PointLight(0x00d4ff, 0.8, 600);
-    helixLight.position.set(0, 0, 0);
-    this.scene.add(helixLight);
+    // Ambient Galaxy Core Light
+    const coreLight = new THREE.PointLight(0xfff4d6, 1.2, 500);
+    coreLight.position.set(0, 80, 0);
+    this.scene.add(coreLight);
 
     // =========================
     // Orbit Carousel
@@ -297,7 +297,7 @@ export default class VoidAtlasScene {
     // =========================
     this.starField.update(delta);
 
-    this.axisPole.update(delta);
+    this.galaxyCore.update(delta);
 
     this.carousel.update(delta);
     this.carousel.updateFocus(this.camera);
