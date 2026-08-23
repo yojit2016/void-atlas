@@ -161,70 +161,126 @@ export default class VoidAtlasScene {
     // =========================
     this.animate = this.animate.bind(this);
     this.handleResize = this.handleResize.bind(this);
-    this.handlePointerDown =
-      this.handlePointerDown.bind(this);
+    this.handlePointerDown = this.handlePointerDown.bind(this);
+    this.handlePointerMove = this.handlePointerMove.bind(this);
 
     // =========================
     // Events
     // =========================
-    window.addEventListener(
-      "resize",
-      this.handleResize
-    );
+    window.addEventListener("resize", this.handleResize);
 
     this.renderer.domElement.addEventListener(
       "pointerdown",
       this.handlePointerDown
     );
 
-    // =========================
+    this.renderer.domElement.addEventListener(
+      "pointermove",
+      this.handlePointerMove
+    );
+
     // Start render loop
-    // =========================
-    this.animationFrame =
-      requestAnimationFrame(this.animate);
+    this.animationFrame = requestAnimationFrame(this.animate);
+  }
+
+  // =========================================
+  // Raycaster hover handler
+  // =========================================
+  handlePointerMove(event) {
+    const rect = this.renderer.domElement.getBoundingClientRect();
+
+    this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.pointer.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+
+    if (this.cameraRig) {
+      this.cameraRig.setMouse(this.pointer.x, this.pointer.y);
+    }
+
+    if (!this.carousel || !this.carousel.nodes) return;
+
+    this.raycaster.setFromCamera(this.pointer, this.camera);
+    const intersections = this.raycaster.intersectObjects(
+      this.carousel.nodes,
+      false
+    );
+
+    if (intersections.length > 0) {
+      const node = intersections[0].object;
+      if (this.hoveredNode !== node) {
+        if (this.hoveredNode) this.unhighlightNode(this.hoveredNode);
+        this.hoveredNode = node;
+        this.highlightNode(node);
+      }
+    } else if (this.hoveredNode) {
+      this.unhighlightNode(this.hoveredNode);
+      this.hoveredNode = null;
+    }
+  }
+
+  highlightNode(node) {
+    if (!node) return;
+    gsap.to(node.scale, {
+      x: 1.2,
+      y: 1.2,
+      z: 1.2,
+      duration: 0.3,
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+    if (node.userData?.borderMesh) {
+      gsap.to(node.userData.borderMesh.material, {
+        opacity: 0.9,
+        duration: 0.3,
+      });
+      node.userData.borderMesh.material.color.set("#00ffff");
+    }
+    this.onNodeHover?.(node.userData);
+  }
+
+  unhighlightNode(node) {
+    if (!node) return;
+    gsap.to(node.scale, {
+      x: 1.0,
+      y: 1.0,
+      z: 1.0,
+      duration: 0.3,
+      ease: "power2.out",
+      overwrite: "auto",
+    });
+    if (node.userData?.borderMesh) {
+      gsap.to(node.userData.borderMesh.material, {
+        opacity: 0.4,
+        duration: 0.3,
+      });
+      node.userData.borderMesh.material.color.set("#00d2ff");
+    }
+    this.onNodeHover?.(null);
   }
 
   // =========================================
   // Raycaster click handler
   // =========================================
   handlePointerDown(event) {
-    const rect =
-      this.renderer.domElement.getBoundingClientRect();
+    const rect = this.renderer.domElement.getBoundingClientRect();
 
-    this.pointer.x =
-      ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.pointer.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
 
-    this.pointer.y =
-      -(
-        ((event.clientY - rect.top) /
-          rect.height) *
-          2 -
-        1
-      );
-
-    this.raycaster.setFromCamera(
-      this.pointer,
-      this.camera
+    this.raycaster.setFromCamera(this.pointer, this.camera);
+    const intersections = this.raycaster.intersectObjects(
+      this.carousel.nodes,
+      false
     );
-
-    const intersections =
-      this.raycaster.intersectObjects(
-        this.carousel.nodes,
-        false
-      );
 
     if (intersections.length === 0) return;
 
     const node = intersections[0].object;
-    const sourceUrl =
-      node.userData?.sourceUrl;
-
-    if (sourceUrl) {
-      window.open(
-        sourceUrl,
-        "_blank",
-        "noopener,noreferrer"
-      );
+    if (node.userData) {
+      if (this.onNodeClick) {
+        this.onNodeClick(node.userData);
+      } else if (node.userData.sourceUrl) {
+        window.open(node.userData.sourceUrl, "_blank", "noopener,noreferrer");
+      }
     }
   }
 
@@ -298,6 +354,11 @@ export default class VoidAtlasScene {
     this.renderer.domElement.removeEventListener(
       "pointerdown",
       this.handlePointerDown
+    );
+
+    this.renderer.domElement.removeEventListener(
+      "pointermove",
+      this.handlePointerMove
     );
 
     if (this.unsubscribeScroll) {
