@@ -20,7 +20,20 @@ export default class ScrollController {
         this.lastProgress = 0;
         this.lastTimestamp = performance.now();
         this.onWarp = null;
-        
+
+        this.sections = {
+            deepfield: 0,      // scroll progress 0.0
+            nebulae: 0.33,     // scroll progress 0.33
+            signals: 0.66,     // scroll progress 0.66
+        };
+    }
+
+    scrollToSection(name) {
+        const progress = this.sections[name];
+        if (progress === undefined) return;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const targetY = progress * maxScroll;
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
     }
 
     clamp(value){
