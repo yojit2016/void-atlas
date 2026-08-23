@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import VoidAtlasScene from "../../scene/VoidAtlasScene";
 import { useCosmicData } from "../../hooks/useCosmicData";
-import NodeDetailModal from "../ui/NodeDetailModal";
+import NodeModal from "../ui/NodeModal";
 import ObservatoryHUD from "../hud/ObservatoryHUD";
 
 function isWebGLSupported() {
@@ -121,8 +121,8 @@ export default function SceneCanvas() {
           </div>
         </div>
         {selectedItem && (
-          <NodeDetailModal
-            item={selectedItem}
+          <NodeModal
+            node={selectedItem}
             onClose={() => setSelectedItem(null)}
           />
         )}
@@ -141,8 +141,8 @@ export default function SceneCanvas() {
       />
       <ObservatoryHUD count={images.length} />
       {selectedItem && (
-        <NodeDetailModal
-          item={selectedItem}
+        <NodeModal
+          node={selectedItem}
           onClose={() => setSelectedItem(null)}
         />
       )}
