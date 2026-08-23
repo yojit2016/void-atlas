@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import VoidAtlasScene from "../../scene/VoidAtlasScene";
 import { useCosmicData } from "../../hooks/useCosmicData";
+import NodeDetailModal from "../ui/NodeDetailModal";
+import ObservatoryHUD from "../hud/ObservatoryHUD";
 
 function isWebGLSupported() {
   try {
@@ -20,8 +22,8 @@ export default function SceneCanvas() {
   const canvasRef = useRef(null);
   const sceneRef = useRef(null);
 
-  const [webGLSupported, setWebGLSupported] =
-    useState(true);
+  const [webGLSupported, setWebGLSupported] = useState(true);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const { images } = useCosmicData();
 
@@ -36,9 +38,11 @@ export default function SceneCanvas() {
       return;
     }
 
-    const scene = new VoidAtlasScene(
-      canvasRef.current
-    );
+    const scene = new VoidAtlasScene(canvasRef.current);
+
+    scene.onNodeClick = (nodeData) => {
+      setSelectedItem(nodeData);
+    };
 
     sceneRef.current = scene;
 
@@ -53,12 +57,9 @@ export default function SceneCanvas() {
   // =========================
   useEffect(() => {
     if (!sceneRef.current) return;
-    if (!images || images.length === 0)
-      return;
+    if (!images || images.length === 0) return;
 
-    sceneRef.current.carousel.setImages(
-      images
-    );
+    sceneRef.current.carousel.setImages(images);
   }, [images]);
 
   // =========================
@@ -77,28 +78,23 @@ export default function SceneCanvas() {
           <p
             className="text-xs uppercase tracking-widest mb-12"
             style={{
-              color:
-                "rgba(100,220,255,0.5)",
+              color: "rgba(100,220,255,0.5)",
             }}
           >
-            Interactive 3D mode requires
-            WebGL — showing archive view
+            Interactive 3D mode requires WebGL — showing archive view
           </p>
 
           <div className="grid grid-cols-2 gap-6">
             {images.map((img) => (
-              <a
+              <div
                 key={img.id}
-                href={img.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block"
+                onClick={() => setSelectedItem(img)}
+                className="group block cursor-pointer"
               >
                 <div
                   className="aspect-video overflow-hidden mb-3"
                   style={{
-                    border:
-                      "1px solid rgba(100,220,255,0.15)",
+                    border: "1px solid rgba(100,220,255,0.15)",
                   }}
                 >
                   <img
@@ -115,27 +111,41 @@ export default function SceneCanvas() {
                 <p
                   className="text-xs mt-1"
                   style={{
-                    color:
-                      "rgba(100,220,255,0.5)",
+                    color: "rgba(100,220,255,0.5)",
                   }}
                 >
                   {img.sourceName}
                 </p>
-              </a>
+              </div>
             ))}
           </div>
         </div>
+        {selectedItem && (
+          <NodeDetailModal
+            item={selectedItem}
+            onClose={() => setSelectedItem(null)}
+          />
+        )}
       </div>
     );
   }
 
   // =========================
-  // WebGL Canvas
+  // WebGL Canvas & HUD Overlay
   // =========================
   return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 w-full h-full block bg-black"
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        className="fixed inset-0 w-full h-full block bg-black"
+      />
+      <ObservatoryHUD count={images.length} />
+      {selectedItem && (
+        <NodeDetailModal
+          item={selectedItem}
+          onClose={() => setSelectedItem(null)}
+        />
+      )}
+    </>
   );
 }
