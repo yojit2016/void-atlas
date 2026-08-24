@@ -1,12 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import SceneCanvas from '../components/canvas/SceneCanvas';
 import VoidAtlasUI from '../components/ui/VoidAtlasUI';
+import { useCosmicData } from '../hooks/useCosmicData';
 
 export default function Home() {
   const [scrollController, setScrollController] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [activeNode, setActiveNode] = useState(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+
+  const { images } = useCosmicData();
+  const totalCount = images.length || 32;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,8 +31,8 @@ export default function Home() {
   }, []);
 
   const currentImage = Math.min(
-    Math.floor(scrollProgress * 12) + 1,
-    12
+    Math.floor(scrollProgress * totalCount) + 1,
+    totalCount
   );
 
   return (
@@ -39,9 +43,9 @@ export default function Home() {
         activeNode={activeNode}
         scrollProgress={scrollProgress}
         currentImage={currentImage}
-        totalImages={12}
+        totalImages={totalCount}
       />
-      <div style={{ height: `${12 * 150}vh` }} aria-hidden="true" />
+      <div style={{ height: `${totalCount * 80}vh` }} aria-hidden="true" />
       <SceneCanvas
         onSceneReady={setScrollController}
         onNodeClick={handleNodeClick}

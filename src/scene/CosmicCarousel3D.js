@@ -19,7 +19,8 @@ export default class CosmicCarousel3D {
     this.nodes.forEach((node) => this.group.remove(node));
     this.nodes = [];
 
-    const count = Math.min(imageCount, 12); // max 12 nodes
+    const count = imageCount || 12;
+    this.orbitRadius = Math.max(220, count * 18);
 
     for (let i = 0; i < count; i++) {
       const angle = (i / count) * Math.PI * 2;
@@ -106,6 +107,9 @@ export default class CosmicCarousel3D {
           sourceName: img.sourceName,
           description: img.description,
           telescope: img.telescope,
+          constellation: img.constellation,
+          objectType: img.objectType,
+          captureDate: img.captureDate,
           image: img,
         };
       });

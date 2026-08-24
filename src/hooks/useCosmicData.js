@@ -13,8 +13,7 @@ export function useCosmicData() {
   useEffect(() => {
     // Load directly from curated local archive of NASA imagery
     // Fast, offline-ready, no API rate limits or network failures
-    const selected = shuffleAndSlice(localSpaceArchive, 12);
-    setImages(selected);
+    setImages(localSpaceArchive);
     setLoading(false);
   }, []);
 
