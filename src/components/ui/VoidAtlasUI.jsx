@@ -511,6 +511,45 @@ export function ScrollIndicator({ progress = 0 }) {
 }
 
 // =========================================================
+// Component 6 — ImageCounter
+// =========================================================
+export function ImageCounter({ current = 1, total = 12 }) {
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        bottom: '28px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 50,
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        fontFamily: "'Space Grotesk', sans-serif",
+      }}
+    >
+      <span style={{ fontSize: '10px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.25)' }}>
+        {String(current).padStart(2, '0')}
+      </span>
+      <div style={{ width: '40px', height: '1px', background: 'rgba(255,255,255,0.1)', position: 'relative', overflow: 'hidden' }}>
+        <div
+          style={{
+            height: '100%',
+            width: `${(current / total) * 100}%`,
+            background: '#00d4ff',
+            transition: 'width 0.6s ease',
+          }}
+        />
+      </div>
+      <span style={{ fontSize: '10px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.15)' }}>
+        {String(total).padStart(2, '0')}
+      </span>
+    </div>
+  );
+}
+
+// =========================================================
 // Default Export — VoidAtlasUI
 // =========================================================
 export default function VoidAtlasUI({
@@ -518,6 +557,8 @@ export default function VoidAtlasUI({
   onModalClose,
   activeNode,
   scrollProgress = 0,
+  currentImage = 1,
+  totalImages = 12,
 }) {
   useEffect(() => {
     if (!document.getElementById('void-atlas-fonts')) {
@@ -549,6 +590,7 @@ export default function VoidAtlasUI({
       <NodeDetailModal open={modalOpen} onClose={onModalClose} node={activeNode} />
       <BottomCredit />
       <ScrollIndicator progress={scrollProgress} />
+      <ImageCounter current={currentImage} total={totalImages} />
     </>
   );
 }
