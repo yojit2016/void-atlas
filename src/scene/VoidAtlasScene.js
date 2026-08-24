@@ -277,10 +277,18 @@ export default class VoidAtlasScene {
 
     if (intersections.length === 0) return;
 
-    const node = intersections[0].object;
+    const intersect = intersections[0];
+    const node = intersect.object;
     if (node.userData) {
       if (this.onNodeClick) {
-        this.onNodeClick(node.userData);
+        this.onNodeClick({
+          title: node.userData.title || '',
+          telescope: node.userData.image?.telescope || node.userData.telescope || '',
+          description: node.userData.image?.description || node.userData.description || '',
+          image: node.userData.image?.image || node.userData.image || '',
+          sourceUrl: node.userData.sourceUrl || '',
+          sourceName: node.userData.sourceName || 'NASA',
+        });
       } else if (node.userData.sourceUrl) {
         window.open(node.userData.sourceUrl, "_blank", "noopener,noreferrer");
       }

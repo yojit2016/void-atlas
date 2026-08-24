@@ -1,4 +1,3 @@
-import Navbar from '../components/ui/Navbar'
 import StarCursor from '../components/ui/StarCursor'
 import Home from '../pages/Home'
 
