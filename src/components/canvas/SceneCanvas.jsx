@@ -29,6 +29,14 @@ export default function SceneCanvas({ onSceneReady, onNodeClick }) {
   // =========================
   // Create Three.js scene
   // =========================
+  const onSceneReadyRef = useRef(onSceneReady);
+  const onNodeClickRef = useRef(onNodeClick);
+
+  useEffect(() => {
+    onSceneReadyRef.current = onSceneReady;
+    onNodeClickRef.current = onNodeClick;
+  }, [onSceneReady, onNodeClick]);
+
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -39,23 +47,25 @@ export default function SceneCanvas({ onSceneReady, onNodeClick }) {
 
     const scene = new VoidAtlasScene(canvasRef.current);
 
-    if (onNodeClick) {
-      scene.onNodeClick = onNodeClick;
-    } else {
-      scene.onNodeClick = (nodeData) => setSelectedItem(nodeData);
-    }
+    scene.onNodeClick = (nodeData) => {
+      if (onNodeClickRef.current) {
+        onNodeClickRef.current(nodeData);
+      } else {
+        setSelectedItem(nodeData);
+      }
+    };
 
     sceneRef.current = scene;
 
-    if (onSceneReady) {
-      onSceneReady(scene.scrollController);
+    if (onSceneReadyRef.current) {
+      onSceneReadyRef.current(scene.scrollController);
     }
 
     return () => {
       scene.destroy();
       sceneRef.current = null;
     };
-  }, [onSceneReady, onNodeClick]);
+  }, []);
 
   // =========================
   // Apply NASA images

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import SceneCanvas from '../components/canvas/SceneCanvas';
 import VoidAtlasUI from '../components/ui/VoidAtlasUI';
 
@@ -7,19 +7,35 @@ export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
   const [activeNode, setActiveNode] = useState(null);
 
-  const handleNodeClick = (nodeData) => {
+  const handleNodeClick = useCallback((nodeData) => {
     setActiveNode(nodeData);
     setModalOpen(true);
-  };
+  }, []);
+
+  const handleDeepfield = useCallback(() => {
+    scrollController?.scrollToSection('deepfield');
+  }, [scrollController]);
+
+  const handleNebulae = useCallback(() => {
+    scrollController?.scrollToSection('nebulae');
+  }, [scrollController]);
+
+  const handleSignals = useCallback(() => {
+    scrollController?.scrollToSection('signals');
+  }, [scrollController]);
+
+  const handleModalClose = useCallback(() => {
+    setModalOpen(false);
+  }, []);
 
   return (
     <>
       <VoidAtlasUI
-        onDeepfield={() => scrollController?.scrollToSection('deepfield')}
-        onNebulae={() => scrollController?.scrollToSection('nebulae')}
-        onSignals={() => scrollController?.scrollToSection('signals')}
+        onDeepfield={handleDeepfield}
+        onNebulae={handleNebulae}
+        onSignals={handleSignals}
         modalOpen={modalOpen}
-        onModalClose={() => setModalOpen(false)}
+        onModalClose={handleModalClose}
         activeNode={activeNode}
       />
       <div style={{ height: '800vh' }} aria-hidden="true" />
