@@ -23,7 +23,7 @@ export default function Home() {
         onModalClose={handleModalClose}
         activeNode={activeNode}
       />
-      <div style={{ height: '800vh' }} aria-hidden="true" />
+      <div style={{ height: '1400vh' }} aria-hidden="true" />
       <SceneCanvas
         onSceneReady={setScrollController}
         onNodeClick={handleNodeClick}
