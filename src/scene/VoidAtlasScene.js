@@ -132,28 +132,11 @@ export default class VoidAtlasScene {
     this.unsubscribeScroll =
       this.scrollController.onProgressChange(
         (progress) => {
-          // Camera position dolly into galaxy core
-          gsap.to(this.cameraRig.group.position, {
-            z: gsap.utils.interpolate(520, 120, progress),
-            y: gsap.utils.interpolate(120, 40, progress),
-            duration: 0.8,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-
-          // Camera pitch levels out as user flies into core
-          gsap.to(this.cameraRig.camera.rotation, {
-            x: gsap.utils.interpolate(-0.22, -0.05, progress),
-            duration: 0.8,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-
-          // Rotate orbit carousel around central axis
+          // Orbit ring rotates a full 360 degrees over the full scroll
           gsap.to(this.carousel.group.rotation, {
             y: progress * Math.PI * 2,
-            duration: 0.8,
-            ease: "power2.out",
+            duration: 1.2,
+            ease: "power3.out",
             overwrite: "auto",
           });
         }
