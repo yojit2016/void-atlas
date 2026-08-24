@@ -12,18 +12,6 @@ export default function Home() {
     setModalOpen(true);
   }, []);
 
-  const handleDeepfield = useCallback(() => {
-    scrollController?.scrollToSection('deepfield');
-  }, [scrollController]);
-
-  const handleNebulae = useCallback(() => {
-    scrollController?.scrollToSection('nebulae');
-  }, [scrollController]);
-
-  const handleSignals = useCallback(() => {
-    scrollController?.scrollToSection('signals');
-  }, [scrollController]);
-
   const handleModalClose = useCallback(() => {
     setModalOpen(false);
   }, []);
@@ -31,9 +19,6 @@ export default function Home() {
   return (
     <>
       <VoidAtlasUI
-        onDeepfield={handleDeepfield}
-        onNebulae={handleNebulae}
-        onSignals={handleSignals}
         modalOpen={modalOpen}
         onModalClose={handleModalClose}
         activeNode={activeNode}
