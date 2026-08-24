@@ -449,12 +449,75 @@ export function BottomCredit() {
 }
 
 // =========================================================
+// Component 5 — ScrollIndicator
+// =========================================================
+export function ScrollIndicator({ progress = 0 }) {
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        right: '28px',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 50,
+        pointerEvents: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 0,
+      }}
+    >
+      {/* Track line */}
+      <div
+        style={{
+          width: '1px',
+          height: '120px',
+          background: 'rgba(255,255,255,0.08)',
+          position: 'relative',
+        }}
+      >
+        {/* Progress dot */}
+        <div
+          style={{
+            position: 'absolute',
+            top: `${progress * 100}%`,
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '5px',
+            height: '5px',
+            borderRadius: '50%',
+            background: '#00d4ff',
+            boxShadow: '0 0 8px #00d4ff',
+            transition: 'top 0.1s ease',
+          }}
+        />
+      </div>
+      {/* Label */}
+      <div
+        style={{
+          fontFamily: "'Space Grotesk', sans-serif",
+          fontSize: '8px',
+          letterSpacing: '0.2em',
+          color: 'rgba(255,255,255,0.18)',
+          textTransform: 'uppercase',
+          marginTop: '10px',
+          writingMode: 'vertical-rl',
+        }}
+      >
+        Explore
+      </div>
+    </div>
+  );
+}
+
+// =========================================================
 // Default Export — VoidAtlasUI
 // =========================================================
 export default function VoidAtlasUI({
   modalOpen,
   onModalClose,
   activeNode,
+  scrollProgress = 0,
 }) {
   useEffect(() => {
     if (!document.getElementById('void-atlas-fonts')) {
@@ -485,6 +548,7 @@ export default function VoidAtlasUI({
       <HeroOverlay />
       <NodeDetailModal open={modalOpen} onClose={onModalClose} node={activeNode} />
       <BottomCredit />
+      <ScrollIndicator progress={scrollProgress} />
     </>
   );
 }
