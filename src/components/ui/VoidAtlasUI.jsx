@@ -3,15 +3,7 @@ import React, { useState, useEffect } from 'react';
 // =========================================================
 // Component 1 — Navbar
 // =========================================================
-export function Navbar({ onDeepfield, onNebulae, onSignals }) {
-  const [hoveredNav, setHoveredNav] = useState(null);
-
-  const navItems = [
-    { label: 'DEEPFIELD', action: onDeepfield },
-    { label: 'NEBULAE', action: onNebulae },
-    { label: 'SIGNALS', action: onSignals },
-  ];
-
+export function Navbar() {
   return (
     <nav
       style={{
@@ -52,34 +44,6 @@ export function Navbar({ onDeepfield, onNebulae, onSignals }) {
           VOID ATLAS
         </span>
       </div>
-
-      {/* RIGHT */}
-      <div style={{ display: 'flex', flexDirection: 'row', gap: '36px' }}>
-        {navItems.map((item) => (
-          <button
-            key={item.label}
-            onClick={item.action}
-            onMouseEnter={() => setHoveredNav(item.label)}
-            onMouseLeave={() => setHoveredNav(null)}
-            style={{
-              fontFamily: "'Space Grotesk', sans-serif",
-              fontSize: '10px',
-              fontWeight: 400,
-              letterSpacing: '0.26em',
-              textTransform: 'uppercase',
-              color: hoveredNav === item.label ? '#00d4ff' : 'rgba(255,255,255,0.35)',
-              textShadow: hoveredNav === item.label ? '0 0 14px rgba(0,212,255,0.65)' : 'none',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-              transition: 'color 0.25s ease, text-shadow 0.25s ease',
-            }}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
     </nav>
   );
 }
@@ -89,97 +53,112 @@ export function Navbar({ onDeepfield, onNebulae, onSignals }) {
 // =========================================================
 export function HeroOverlay() {
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 10,
-        pointerEvents: 'none',
-        background: 'transparent',
-        fontFamily: "'Space Grotesk', sans-serif",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: '72px',
-          fontWeight: 200,
-          letterSpacing: '0.28em',
-          color: 'rgba(255,255,255,0.9)',
-          margin: 0,
-          textTransform: 'uppercase',
-        }}
-      >
-        VOID ATLAS
-      </h1>
-
-      <span
-        style={{
-          fontSize: '10px',
-          fontWeight: 400,
-          letterSpacing: '0.58em',
-          color: '#00d4ff',
-          textTransform: 'uppercase',
-          marginTop: '16px',
-        }}
-      >
-        COSMIC OBSERVATORY
-      </span>
-
+    <>
+      {/* TOP TITLE LAYER */}
       <div
         style={{
-          width: '56px',
-          height: '1px',
-          background: 'rgba(0,212,255,0.18)',
-          margin: '24px auto',
-        }}
-      />
-
-      <p
-        style={{
-          fontSize: '13px',
-          fontWeight: 300,
-          lineHeight: 1.95,
-          color: 'rgba(255,255,255,0.42)',
-          maxWidth: '380px',
-          textAlign: 'center',
-          margin: 0,
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          paddingTop: '8vh',
+          zIndex: 10,
+          pointerEvents: 'none',
+          background: 'transparent',
+          fontFamily: "'Space Grotesk', sans-serif",
         }}
       >
-        An interactive deep-field observatory powered by NASA's public image archive. Explore curated astronomical imagery — nebulae, galaxies, and cosmic structures — captured by Hubble and James Webb.
-      </p>
+        <h1
+          style={{
+            fontSize: '72px',
+            fontWeight: 200,
+            letterSpacing: '0.28em',
+            color: 'rgba(255,255,255,0.9)',
+            margin: 0,
+            textTransform: 'uppercase',
+          }}
+        >
+          VOID ATLAS
+        </h1>
 
-      <span
+        <span
+          style={{
+            fontSize: '10px',
+            fontWeight: 400,
+            letterSpacing: '0.58em',
+            color: '#00d4ff',
+            textTransform: 'uppercase',
+            marginTop: '16px',
+          }}
+        >
+          COSMIC OBSERVATORY
+        </span>
+      </div>
+
+      {/* BOTTOM DESCRIPTION LAYER */}
+      <div
         style={{
-          fontSize: '9px',
-          letterSpacing: '0.3em',
-          color: 'rgba(255,255,255,0.2)',
-          textTransform: 'uppercase',
-          marginTop: '20px',
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          zIndex: 10,
+          pointerEvents: 'none',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          paddingBottom: '52px',
+          background: 'linear-gradient(to top, rgba(2,2,12,0.85) 0%, transparent 100%)',
         }}
       >
-        NASA PUBLIC DOMAIN IMAGERY
-      </span>
+        <p
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '13px',
+            fontWeight: 300,
+            lineHeight: 1.95,
+            color: 'rgba(255,255,255,0.42)',
+            maxWidth: '420px',
+            textAlign: 'center',
+            margin: '0 auto',
+          }}
+        >
+          An interactive deep-field observatory powered by NASA's public image archive. Explore curated astronomical imagery — nebulae, galaxies, and cosmic structures — captured by Hubble and James Webb.
+        </p>
 
-      <span
-        style={{
-          fontSize: '10px',
-          letterSpacing: '0.36em',
-          color: 'rgba(255,255,255,0.28)',
-          textTransform: 'uppercase',
-          marginTop: '30px',
-          animation: 'voidPulse 2.6s ease-in-out infinite',
-        }}
-      >
-        SCROLL TO EXPLORE ↓
-      </span>
-    </div>
+        <div
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '9px',
+            letterSpacing: '0.3em',
+            color: 'rgba(255,255,255,0.2)',
+            textTransform: 'uppercase',
+            marginTop: '16px',
+          }}
+        >
+          NASA PUBLIC DOMAIN IMAGERY
+        </div>
+
+        <div
+          style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: '10px',
+            letterSpacing: '0.36em',
+            color: 'rgba(255,255,255,0.28)',
+            textTransform: 'uppercase',
+            marginTop: '20px',
+            animation: 'voidPulse 2.6s ease-in-out infinite',
+          }}
+        >
+          SCROLL TO EXPLORE ↓
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -187,7 +166,6 @@ export function HeroOverlay() {
 // Component 3 — NodeDetailModal
 // =========================================================
 export function NodeDetailModal({ open, onClose, node }) {
-  const [btnHover, setBtnHover] = useState(false);
   const [closeHover, setCloseHover] = useState(false);
 
   const imageSrc = typeof node?.image === 'string' ? node.image : node?.image?.image || '';
@@ -273,47 +251,94 @@ export function NodeDetailModal({ open, onClose, node }) {
       >
         {/* TOP CONTENT */}
         <div>
+          {/* Object name */}
           <h2
             style={{
+              fontFamily: "'Space Grotesk', sans-serif",
               fontSize: '20px',
               fontWeight: 200,
               color: 'rgba(255,255,255,0.9)',
               margin: 0,
-              letterSpacing: '0.02em',
             }}
           >
-            {node?.title || 'Cosmic Target'}
+            {node?.title}
           </h2>
 
+          {/* Telescope */}
           <span
             style={{
+              fontFamily: "'Space Grotesk', sans-serif",
               fontSize: '9px',
               fontWeight: 400,
               letterSpacing: '0.32em',
               color: '#00d4ff',
               textTransform: 'uppercase',
               display: 'block',
-              marginTop: '9px',
+              marginTop: '8px',
             }}
           >
-            {node?.telescope || 'NASA Observatory'}
+            {node?.telescope || 'Hubble Space Telescope'}
           </span>
 
+          {/* Constellation / object type row */}
+          <div style={{ display: 'flex', gap: '24px', marginTop: '10px' }}>
+            {node?.constellation && (
+              <span
+                style={{
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontSize: '9px',
+                  color: 'rgba(255,255,255,0.3)',
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                ◆ {node.constellation}
+              </span>
+            )}
+            {node?.objectType && (
+              <span
+                style={{
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontSize: '9px',
+                  color: 'rgba(255,255,255,0.3)',
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                ◆ {node.objectType}
+              </span>
+            )}
+            {node?.captureDate && (
+              <span
+                style={{
+                  fontFamily: "'Space Grotesk', sans-serif",
+                  fontSize: '9px',
+                  color: 'rgba(255,255,255,0.3)',
+                  letterSpacing: '0.18em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                ◆ {node.captureDate}
+              </span>
+            )}
+          </div>
+
+          {/* Description */}
           <p
             style={{
+              fontFamily: "'Space Grotesk', sans-serif",
               fontSize: '12px',
               fontWeight: 300,
               lineHeight: 1.78,
               color: 'rgba(255,255,255,0.48)',
-              marginTop: '13px',
-              marginRight: '20px',
+              marginTop: '14px',
               display: '-webkit-box',
               WebkitLineClamp: 3,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
             }}
           >
-            {node?.description || 'Astronomical observation target from NASA public domain imagery catalog.'}
+            {node?.description}
           </p>
         </div>
 
@@ -321,44 +346,49 @@ export function NodeDetailModal({ open, onClose, node }) {
         <div
           style={{
             display: 'flex',
-            flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
+            marginTop: '16px',
           }}
         >
-          <button
-            onClick={() => {
-              if (node?.sourceUrl) {
-                window.open(node.sourceUrl, '_blank', 'noopener,noreferrer');
-              }
-            }}
-            onMouseEnter={() => setBtnHover(true)}
-            onMouseLeave={() => setBtnHover(false)}
+          <a
+            href={node?.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               fontFamily: "'Space Grotesk', sans-serif",
               fontSize: '10px',
-              letterSpacing: '0.26em',
+              fontWeight: 400,
+              letterSpacing: '0.28em',
               color: '#00d4ff',
               textTransform: 'uppercase',
-              background: btnHover ? 'rgba(0,212,255,0.07)' : 'transparent',
-              border: '1px solid',
-              borderColor: btnHover ? '#00d4ff' : 'rgba(0,212,255,0.45)',
-              padding: '8px 22px',
-              cursor: 'pointer',
-              transition: 'background 0.25s ease, border-color 0.25s ease',
+              textDecoration: 'none',
+              border: '1px solid rgba(0,212,255,0.45)',
+              padding: '9px 24px',
+              display: 'inline-block',
+              transition: 'background 0.25s ease, borderColor 0.25s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(0,212,255,0.08)';
+              e.currentTarget.style.borderColor = '#00d4ff';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.borderColor = 'rgba(0,212,255,0.45)';
             }}
           >
-            VIEW SOURCE →
-          </button>
+            VIEW ON {node?.sourceName?.toUpperCase() || 'NASA'} →
+          </a>
 
           <span
             style={{
+              fontFamily: "'Space Grotesk', sans-serif",
               fontSize: '9px',
               color: 'rgba(255,255,255,0.18)',
               letterSpacing: '0.14em',
             }}
           >
-            via {node?.sourceName || 'NASA Image Archive'}
+            {node?.sourceName || 'NASA Image Archive'}
           </span>
         </div>
       </div>
@@ -422,9 +452,6 @@ export function BottomCredit() {
 // Default Export — VoidAtlasUI
 // =========================================================
 export default function VoidAtlasUI({
-  onDeepfield,
-  onNebulae,
-  onSignals,
   modalOpen,
   onModalClose,
   activeNode,
@@ -454,7 +481,7 @@ export default function VoidAtlasUI({
 
   return (
     <>
-      <Navbar onDeepfield={onDeepfield} onNebulae={onNebulae} onSignals={onSignals} />
+      <Navbar />
       <HeroOverlay />
       <NodeDetailModal open={modalOpen} onClose={onModalClose} node={activeNode} />
       <BottomCredit />
