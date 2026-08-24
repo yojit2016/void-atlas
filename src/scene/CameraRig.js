@@ -15,15 +15,15 @@ export default class CameraRig {
 
     // Base camera position
     this.baseX = 0;
-    this.baseY = 120;
-    this.baseZ = 520;
+    this.baseY = 60;
+    this.baseZ = 380;
 
     this.camera.position.set(
       this.baseX,
       this.baseY,
       this.baseZ
     );
-    this.camera.rotation.x = -0.22;
+    this.camera.rotation.x = -0.1;
 
     // Parent camera to rig
     this.group.add(this.camera);
