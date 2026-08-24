@@ -34,7 +34,7 @@ export default function Home() {
         activeNode={activeNode}
         scrollProgress={scrollProgress}
       />
-      <div style={{ height: '1400vh' }} aria-hidden="true" />
+      <div style={{ height: `${12 * 150}vh` }} aria-hidden="true" />
       <SceneCanvas
         onSceneReady={setScrollController}
         onNodeClick={handleNodeClick}
