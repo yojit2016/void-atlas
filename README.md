@@ -1,53 +1,125 @@
-# Void Atlas — Interactive Deep Space Observatory
+# Void Atlas
 
-Void Atlas is a scroll-driven, particle-heavy interactive space observatory built in an **Active Theory-style aesthetic**: cinematic, responsive, generously animated, and visually stunning.
+A 3D interactive cosmic observatory built for the browser. You scroll through
+deep space while a galaxy of NASA imagery rotates around you.
 
-## 🚀 Features
+![Void Atlas Screenshot](./screenshots/hero.png)
 
-- **Particle Double-Helix**: Animated flowing DNA-style double helix in 3D space with glowing cyan/magenta color dynamics.
-- **Orbit Ring of Content Nodes**: Key astronomical content pieces (images from NASA APOD, NASA Image Library, Hubble, and JWST) arranged on an orbiting 3D ring.
-- **Scroll-Driven Camera**: Smooth lerped Three.js camera Z fly-through tied to normalized scroll progress.
-- **Bloom & Vignette Post-Processing**: Glow on emissive particles and nodes via `UnrealBloomPass` and custom shader passes.
-- **Interactive Node Modal**: Click any orbit node to launch a glassmorphism modal with high-res space imagery, telescope data, capture date, constellation telemetry, and direct NASA archive links.
-- **Graceful WebGL Fallback**: Fully accessible archive layout for devices without WebGL acceleration.
+---
 
-## 🛠️ Stack
+## What it does
 
-- **Framework**: React 18 + Vite
-- **3D Engine**: Three.js (raw WebGL scene architecture)
-- **Animation**: GSAP + Framer Motion
-- **Styling**: Tailwind CSS + Custom CSS Design System
+I wanted to build something that felt less like a website and more like an
+actual place you visit. Void Atlas pulls images from NASA's public APIs and
+displays them as floating panels orbiting a spiral galaxy particle system in
+Three.js. As you scroll, the galaxy rotates and each image comes into focus
+one at a time. Click any image to see its metadata and jump to the original
+NASA source page.
 
-## 📦 Setup & Installation
+The whole thing runs in the browser — no backend, no login, just space.
 
-1. **Clone the repository and install dependencies**:
-   ```bash
-   npm install
-   ```
+---
 
-2. **Set up Environment Variables**:
-   Copy `.env.example` to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-   (Optional) Replace `DEMO_KEY` with your official NASA API key from [api.nasa.gov](https://api.nasa.gov/).
+## Screenshots
 
-3. **Run Locally**:
-   ```bash
-   npm run dev
-   ```
-   Open `http://localhost:5173` in your browser.
+**Landing view**
 
-## 🏭 Production Build & Preview
+![Landing](./screenshots/landing.png)
+
+**Image in focus**
+
+![Focus](./screenshots/focus.png)
+
+**Node detail modal**
+
+![Modal](./screenshots/modal.png)
+
+---
+
+## Tech stack
+
+- **Three.js** — 3D scene, particle systems, geometry, WebGL renderer
+- **React 18 + Vite** — UI shell and build tooling
+- **GSAP** — scroll-driven camera and animation system
+- **NASA APOD API** — Astronomy Picture of the Day
+- **NASA Image Library API** — searchable archive of space imagery
+- **Space Grotesk** — typography
+
+No UI component libraries. No React Three Fiber. Raw Three.js for full control
+over the render pipeline.
+
+---
+
+## How it works
+
+The scene has a few main parts:
+
+**Galaxy core** — 18,000 particles arranged into a three-armed spiral using
+parametric math. The core is warm gold, the arms fade to electric blue. It
+rotates slowly and pulses.
+
+**Orbit ring** — NASA images load as textured planes positioned in a circle
+around the galaxy. As you scroll, the ring rotates so each image cycles
+through the front-facing position. The focused image scales up slightly.
+
+**Scroll system** — A normalized 0→1 progress value drives everything.
+ScrollController converts raw browser scroll events into that progress value.
+GSAP animates the ring rotation and camera based on it.
+
+**Data pipeline** — On load, the app attempts to fetch from NASA APOD and the
+NASA Image Library. If the API is unavailable or rate-limited, it falls back
+to a curated local archive of 24 high-resolution space images. Either way,
+12 randomly selected images load into the scene.
+
+**Post-processing** — EffectComposer with UnrealBloomPass makes the galaxy
+core and particle helix glow. A vignette shader darkens the screen edges for
+a cinematic frame.
+
+---
+
+## Running locally
 
 ```bash
-# Build production bundle
-npm run build
-
-# Preview build locally
-npm run preview
+git clone https://github.com/YOUR_USERNAME/void-atlas
+cd void-atlas
+npm install
 ```
 
-## 🌐 Deployment
+Get a free NASA API key at [api.nasa.gov](https://api.nasa.gov/) — takes
+about 30 seconds. Then:
 
-This project is deploy-ready on Vercel or Netlify. A pre-configured `vercel.json` is included in the project root.
+```bash
+cp .env.example .env
+# Add your key to .env
+npm run dev
+```
+
+Open `http://localhost:5173`. Without a NASA API key the app still works —
+it uses `DEMO_KEY` which has a lower rate limit, and falls back to the local
+image archive if needed.
+
+---
+
+## Deploying
+
+This deploys to Vercel in about 2 minutes:
+
+```bash
+npm install -g vercel
+vercel
+```
+
+Follow the prompts. When asked about build settings:
+- **Build command:** `npm run build`
+- **Output directory:** `dist`
+- **Framework:** Vite
+
+Add your `VITE_NASA_API_KEY` in Vercel's dashboard under
+Settings → Environment Variables.
+
+The public URL Vercel gives you is what to submit — not the
+`vercel.com/<you>/<project>` dashboard link.
+
+---
+
+## Project structure
