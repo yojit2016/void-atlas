@@ -134,8 +134,8 @@ export default class VoidAtlasScene {
         (progress) => {
           // Camera position dolly into galaxy core
           gsap.to(this.cameraRig.group.position, {
-            z: gsap.utils.interpolate(620, 80, progress),
-            y: gsap.utils.interpolate(180, 20, progress),
+            z: gsap.utils.interpolate(320, 80, progress),
+            y: gsap.utils.interpolate(80, 20, progress),
             duration: 0.8,
             ease: "power2.out",
             overwrite: "auto",
@@ -143,7 +143,7 @@ export default class VoidAtlasScene {
 
           // Camera pitch levels out as user flies into core
           gsap.to(this.cameraRig.camera.rotation, {
-            x: gsap.utils.interpolate(-0.28, -0.05, progress),
+            x: gsap.utils.interpolate(-0.18, -0.05, progress),
             duration: 0.8,
             ease: "power2.out",
             overwrite: "auto",
