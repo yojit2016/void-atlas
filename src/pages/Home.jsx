@@ -26,6 +26,11 @@ export default function Home() {
     setModalOpen(false);
   }, []);
 
+  const currentImage = Math.min(
+    Math.floor(scrollProgress * 12) + 1,
+    12
+  );
+
   return (
     <>
       <VoidAtlasUI
@@ -33,6 +38,8 @@ export default function Home() {
         onModalClose={handleModalClose}
         activeNode={activeNode}
         scrollProgress={scrollProgress}
+        currentImage={currentImage}
+        totalImages={12}
       />
       <div style={{ height: `${12 * 150}vh` }} aria-hidden="true" />
       <SceneCanvas
