@@ -17,7 +17,7 @@ function isWebGLSupported() {
   }
 }
 
-export default function SceneCanvas({ onSceneReady }) {
+export default function SceneCanvas({ onSceneReady, onNodeClick }) {
   const canvasRef = useRef(null);
   const sceneRef = useRef(null);
 
@@ -39,9 +39,11 @@ export default function SceneCanvas({ onSceneReady }) {
 
     const scene = new VoidAtlasScene(canvasRef.current);
 
-    scene.onNodeClick = (nodeData) => {
-      setSelectedItem(nodeData);
-    };
+    if (onNodeClick) {
+      scene.onNodeClick = onNodeClick;
+    } else {
+      scene.onNodeClick = (nodeData) => setSelectedItem(nodeData);
+    }
 
     sceneRef.current = scene;
 
@@ -53,7 +55,7 @@ export default function SceneCanvas({ onSceneReady }) {
       scene.destroy();
       sceneRef.current = null;
     };
-  }, [onSceneReady]);
+  }, [onSceneReady, onNodeClick]);
 
   // =========================
   // Apply NASA images
